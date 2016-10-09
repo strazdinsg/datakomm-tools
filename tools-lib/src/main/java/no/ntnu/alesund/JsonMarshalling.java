@@ -5,8 +5,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,12 +15,22 @@ import org.json.JSONObject;
  */
 public class JsonMarshalling implements Marshalling {
 
+    private boolean debug;    
     private final XStream xstream;
     private final ObjectMapper mapper;
 
     public JsonMarshalling() {
         xstream = new XStream(new JsonHierarchicalStreamDriver());
         mapper = new ObjectMapper();
+        debug = false;
+    }
+    
+    /**
+     * Enable/disable debug output
+     * @param debug 
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**
@@ -71,11 +79,12 @@ public class JsonMarshalling implements Marshalling {
         return null;
     }
 
-    private Object tryExtractObject(String xml, Class c) {
+    private Object tryExtractObject(String s, Class c) {
         try {
-            Object o = mapper.readValue(xml, c);
+            Object o = mapper.readValue(s, c);
             return o;
         } catch (IOException ex) {
+            debugOut("Error while extracting object: " + ex.getMessage());
             return null;
         }
     }
@@ -105,8 +114,20 @@ public class JsonMarshalling implements Marshalling {
                 return null;
             }
         } catch (JSONException ex) {
+            debugOut("Error while extracting first field: " + ex.getMessage());
             // Error while parsing the json string
             return null;
+        }
+    }
+
+    /**
+     * Print message to System.out if debug is enabled
+     *
+     * @param msg
+     */
+    private void debugOut(String msg) {
+        if (debug) {
+            System.out.println(msg);
         }
     }
 }
