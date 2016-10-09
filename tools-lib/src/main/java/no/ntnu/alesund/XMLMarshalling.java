@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.XStream;
  *
  * @author Girts Strazdins, 2016-10-09
  */
-public class XMLMarshalling implements Marshalling {
+public class XMLMarshalling extends Marshalling {
 
     private final XStream xstream;
 

@@ -7,8 +7,18 @@ package no.ntnu.alesund;
  *
  * @author Girts Strazdins, 2016-10-09
  */
-public interface Marshalling {
+public abstract class Marshalling {
 
+    private boolean debug = false;    
+    
+    /**
+     * Enable/disable debug output
+     * @param debug 
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+    
     /**
      * Marshal an object to XML string
      * @param o object to be marshalled
@@ -17,7 +27,7 @@ public interface Marshalling {
      * when left blank, the class name including the whole package will be used
      * @return 
      */
-    public String marshall(Object o, Class c, String objectAlias);
+    public abstract String marshall(Object o, Class c, String objectAlias);
 
     /**
      * Unmarshall an object back from an XML string
@@ -25,5 +35,16 @@ public interface Marshalling {
      * @param c expected class of the object
      * @return the created object. It can be casted to the correct class 
      */
-    public Object unmarshall(String s, Class c);
+    public abstract Object unmarshall(String s, Class c);
+
+    /**
+     * Print message to System.out if debug is enabled
+     *
+     * @param msg
+     */
+    protected void debugOut(String msg) {
+        if (debug) {
+            System.out.println(msg);
+        }
+    }
 }

@@ -13,26 +13,16 @@ import org.json.JSONObject;
  *
  * @author Girts Strazdins, 2016-10-09
  */
-public class JsonMarshalling implements Marshalling {
+public class JsonMarshalling extends Marshalling {
 
-    private boolean debug;    
     private final XStream xstream;
     private final ObjectMapper mapper;
 
     public JsonMarshalling() {
         xstream = new XStream(new JsonHierarchicalStreamDriver());
         mapper = new ObjectMapper();
-        debug = false;
     }
     
-    /**
-     * Enable/disable debug output
-     * @param debug 
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-
     /**
      * Marshal an object to Json string
      *
@@ -117,17 +107,6 @@ public class JsonMarshalling implements Marshalling {
             debugOut("Error while extracting first field: " + ex.getMessage());
             // Error while parsing the json string
             return null;
-        }
-    }
-
-    /**
-     * Print message to System.out if debug is enabled
-     *
-     * @param msg
-     */
-    private void debugOut(String msg) {
-        if (debug) {
-            System.out.println(msg);
         }
     }
 }
