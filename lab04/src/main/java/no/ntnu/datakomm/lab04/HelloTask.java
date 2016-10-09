@@ -8,7 +8,7 @@ public class HelloTask extends Task {
     
     public HelloTask() {
         super();
-        this.id = 1;
+        this.id = Tasks.TASK_HELLO.ordinal();
         this.description = "You should send an HTTP post with a static "
                 + "message as a response to this task: include "
                 + "parameter msg=Hello in the HTTP POST";

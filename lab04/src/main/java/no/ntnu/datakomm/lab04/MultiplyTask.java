@@ -16,7 +16,7 @@ public class MultiplyTask extends Task {
     
     public MultiplyTask() {
         super();
-        this.id = 1;
+        this.id = Tasks.TASK_MULTIPLY.ordinal();
         this.description = "Extract all the arguments as numbers, multiply\n"
                 + " them, and send the result to the server as an"
                 + " HTTP POST with parameter result=X, where X is the "
