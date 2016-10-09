@@ -53,7 +53,7 @@ public class FetchWeather {
         String url = "http://" + API_HOST
                 + API_PATH_TEMPLATE.replace("{loc}", location);
         FetchWebString fetcher = new FetchWebString();
-        String response = fetcher.httpGet(url);
+        String response = fetcher.httpGet(url, null);
 
         // Parse the XML
         if (response != null && !response.equals("")) {
