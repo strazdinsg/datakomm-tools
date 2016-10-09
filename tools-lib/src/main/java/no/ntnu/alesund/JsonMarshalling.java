@@ -23,21 +23,20 @@ public class JsonMarshalling extends Marshalling {
         mapper = new ObjectMapper();
     }
     
+    
+    
     /**
      * Marshal an object to Json string
      *
      * @param o object to be marshalled
      * @param c class of the object
-     * @param objectAlias an alias that will be used as the main tag in the XML
-     * when left blank, the class name including the whole package will be used
      * @return
      */
     @Override
-    public String marshall(Object o, Class c, String objectAlias) {
-        if (objectAlias != null) {
-            xstream.alias(objectAlias, c);
+    public String marshall(Object o, Class c) {
+        if (alias != null) {
+            xstream.alias(alias, c);
         }
-        // alias to have "person" as tag/variable name instead of xstreamtest.Person
         return xstream.toXML(o);
     }
 
@@ -50,8 +49,15 @@ public class JsonMarshalling extends Marshalling {
      */
     @Override
     public Object unmarshall(String s, Class c) {
-        // Try to extract the person directly
+        if (s == null) {
+            return null;
+        }
+        
+        // Try to extract the object directly
         Object o = tryExtractObject(s, c);
+        if (o != null) {
+            return o;
+        }
 
         // If direct extraction failed, try to get the first parameter of 
         // the whole object. Sometimes object->json parsers (also this one)
@@ -62,15 +68,19 @@ public class JsonMarshalling extends Marshalling {
         // Then we first take the "car" field and look at it as an object
         String internalJson = getFirstField(s);
         if (internalJson != null) {
-            return tryExtractObject(internalJson, c);
+            o = tryExtractObject(internalJson, c);
+            if (o != null) {
+                return o;
+            }
         }
         
-        // All attempts failed, give up
+        // Give up
         return null;
     }
 
     private Object tryExtractObject(String s, Class c) {
         try {
+            debugOut("Trying to extract object from string " + s);
             Object o = mapper.readValue(s, c);
             return o;
         } catch (IOException ex) {

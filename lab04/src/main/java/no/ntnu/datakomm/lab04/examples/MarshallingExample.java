@@ -22,11 +22,13 @@ public class MarshallingExample {
 
         // Convert task objects to XML and JSON strings
         XMLMarshalling xmlMarshalling = new XMLMarshalling();
-        String helloXml = xmlMarshalling.marshall(helloTask, HelloTask.class, "task");
-        String multiplyXml = xmlMarshalling.marshall(multiplyTask, MultiplyTask.class, "task");
+        xmlMarshalling.setAlias("task");
+        String helloXml = xmlMarshalling.marshall(helloTask, HelloTask.class);
+        String multiplyXml = xmlMarshalling.marshall(multiplyTask, MultiplyTask.class);
         JsonMarshalling jsonMarshalling = new JsonMarshalling();
-        String helloJson = jsonMarshalling.marshall(helloTask, HelloTask.class, "task");
-        String multiplyJson = jsonMarshalling.marshall(multiplyTask, MultiplyTask.class, "task");
+        jsonMarshalling.setAlias("task");
+        String helloJson = jsonMarshalling.marshall(helloTask, HelloTask.class);
+        String multiplyJson = jsonMarshalling.marshall(multiplyTask, MultiplyTask.class);
         
         System.out.println("Example of how you will receive Hello task:");
         System.out.println(helloXml);

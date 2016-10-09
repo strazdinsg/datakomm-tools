@@ -19,14 +19,12 @@ public class XMLMarshalling extends Marshalling {
      * Marshal an object to XML string
      * @param o object to be marshalled
      * @param c class of the object
-     * @param objectAlias an alias that will be used as the main tag in the XML
-     * when left blank, the class name including the whole package will be used
      * @return 
      */
     @Override
-    public String marshall(Object o, Class c, String objectAlias) {
-        if (objectAlias != null) {
-            xstream.alias(objectAlias, c);
+    public String marshall(Object o, Class c) {
+        if (alias != null) {
+            xstream.alias(alias, c);
         }
         // alias to have "person" as tag/variable name instead of xstreamtest.Person
         return xstream.toXML(o);

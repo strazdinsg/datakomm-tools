@@ -48,7 +48,8 @@ public class ToFromXmlJsonTest {
     private void marshallAndUnmarshall(String formatName, 
             Marshalling marshalling) {
         // Convert to string
-        String s = marshalling.marshall(p, Person.class, alias);
+        marshalling.setAlias(alias);
+        String s = marshalling.marshall(p, Person.class);
         System.out.println("Person as " + formatName + ": ");
         System.out.println(s);
 

@@ -9,7 +9,8 @@ package no.ntnu.alesund;
  */
 public abstract class Marshalling {
 
-    private boolean debug = false;    
+    private boolean debug = false;
+    protected String alias;
     
     /**
      * Enable/disable debug output
@@ -20,14 +21,20 @@ public abstract class Marshalling {
     }
     
     /**
+     * Set the alias that will be used for the object (short tag/parameter name)
+     * @param alias 
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+    
+    /**
      * Marshal an object to XML string
      * @param o object to be marshalled
      * @param c class of the object
-     * @param objectAlias an alias that will be used as the main tag in the XML
-     * when left blank, the class name including the whole package will be used
      * @return 
      */
-    public abstract String marshall(Object o, Class c, String objectAlias);
+    public abstract String marshall(Object o, Class c);
 
     /**
      * Unmarshall an object back from an XML string

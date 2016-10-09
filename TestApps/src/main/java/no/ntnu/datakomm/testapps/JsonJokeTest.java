@@ -17,8 +17,6 @@ public class JsonJokeTest {
         FetchWebString fetcher = new FetchWebString();
 //        fetcher.setDebug(true);
         String jokeJSON = fetcher.httpGet(url, null);
-        // Hack the response - add main object alias
-        jokeJSON = "{\"joke\": " + jokeJSON + "}";
         System.out.println("Json response: ");
         System.out.println(jokeJSON);
         
