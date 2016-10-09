@@ -1,0 +1,1 @@
+Interfaces, templates and examples for Lab 04, used in the course "Computer Networks and Network Programming" (DataKommunikasjon med Nettverksprogrammering) at NTNU, in AAlesund.
