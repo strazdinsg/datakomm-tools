@@ -9,7 +9,7 @@ import java.util.List;
  * @author Girts Strazdins, 2016-10-09
  */
 public class Task {
-    protected int id;// ID of this task
+    protected int type;// ID of this task
     protected int sessionId;
     protected String description; // Description of the task
     protected List<String> arguments; // Argument list. Can be empty
@@ -18,12 +18,12 @@ public class Task {
         this.arguments = new ArrayList<>();
     }
     
-    public int getId() {
-        return id;
+    public int getType() {
+        return type;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setType(int id) {
+        this.type = id;
     }
 
     public String getDescription() {

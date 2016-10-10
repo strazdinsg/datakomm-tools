@@ -11,7 +11,7 @@ public class EchoTask extends Task {
 
     public EchoTask() {
         super();
-        this.id = Tasks.TASK_ECHO.ordinal();
+        this.type = Tasks.TASK_ECHO.ordinal();
         this.description = "You should read the text which is in the argument[0]"
                 + "and echo it back: send an HTTP post with a "
                 + "parameter response=receivedMessage";

@@ -13,7 +13,7 @@ public class CrackTask extends Task {
 
     public CrackTask() {
         super();
-        this.id = Tasks.TASK_CRACK.ordinal();
+        this.type = Tasks.TASK_CRACK.ordinal();
         this.description = "You should crack the four-digit PIN code, from"
                 + "the given md5 hash of it, which is in the argument[0]"
                 + " and send an HTTP post with a "
