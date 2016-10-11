@@ -1,7 +1,8 @@
 package no.ntnu.datakomm.lab04;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
-import no.ntnu.alesund.MD5Encoder;
+import no.ntnu.alesund.Encoder;
 
 /**
  * A simple task requiring to crack a md5 hash of four digit PIN code
@@ -19,9 +20,14 @@ public class CrackTask extends Task {
                 + " and send an HTTP post with a "
                 + "parameter pin=XXXX";
         String pin = generateRandomPin(4);
-        MD5Encoder encoder = new MD5Encoder();
-        String hash = encoder.encode(pin);
-        this.arguments.add(hash);
+        Encoder encoder;
+        try {
+            encoder = new Encoder();
+            String hash = encoder.md5(pin);
+            this.arguments.add(hash);
+        } catch (NoSuchAlgorithmException ex) {
+            System.out.println("Could not generate MD5 hash: " + ex.getMessage());
+        }
     }
 
     /**
