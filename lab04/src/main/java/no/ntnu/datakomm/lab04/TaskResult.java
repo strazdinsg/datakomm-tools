@@ -7,6 +7,7 @@ package no.ntnu.datakomm.lab04;
 public class TaskResult {
     boolean success;
     String comment;
+    int sessionId;
 
     public boolean isSuccess() {
         return success;
@@ -23,5 +24,14 @@ public class TaskResult {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public int getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
+    }
+    
     
 }

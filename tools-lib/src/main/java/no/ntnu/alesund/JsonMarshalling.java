@@ -49,6 +49,9 @@ public class JsonMarshalling extends Marshalling {
      */
     @Override
     public Object unmarshall(String s, Class c) {
+        if (alias != null) {
+            xstream.alias(alias, c);
+        }
         if (s == null) {
             return null;
         }

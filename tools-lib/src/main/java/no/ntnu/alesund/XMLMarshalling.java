@@ -38,6 +38,9 @@ public class XMLMarshalling extends Marshalling {
      */
     @Override
     public Object unmarshall(String s, Class c) {
+        if (alias != null) {
+            xstream.alias(alias, c);
+        }
         return xstream.fromXML(s);
     }
 }
