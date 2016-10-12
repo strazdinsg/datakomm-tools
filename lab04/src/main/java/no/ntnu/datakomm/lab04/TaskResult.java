@@ -8,6 +8,13 @@ public class TaskResult {
     boolean success;
     String comment;
     int sessionId;
+    
+    @Override
+    public String toString() {
+        return "Task " + (success ? "successful!" : "failed.")
+                + " sessionId = " + sessionId 
+                + ", comment: " + comment;
+    }
 
     public boolean isSuccess() {
         return success;

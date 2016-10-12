@@ -27,6 +27,14 @@ public class Feedback {
         totalResult = 0;
     }
 
+    public boolean isPassed() {
+        return passed;
+    }
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
+    }
+
     public String getStudent() {
         return student;
     }
