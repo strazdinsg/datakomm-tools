@@ -76,6 +76,7 @@ public class FetchWeather {
         // and http://stackoverflow.com/questions/340787/parsing-xml-with-xpath-in-java
 
         try {
+            // Parse the whole XML using DOM
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(xmlResponse));
@@ -84,6 +85,7 @@ public class FetchWeather {
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
 
+            // Use XPath to find the necessary node
             // Find <tabular><time>[0]<temperature> node
             XPath xpath = XPathFactory.newInstance().newXPath();
             XPathExpression expr = xpath.compile(
