@@ -3,3 +3,5 @@
 json-org-lib/target
 /lab04/target/
 /ModBusTest/target/
+android-tcp-client/AndroidJsonCommandTcpClient/.gradle
+android-tcp-client/AndroidJsonCommandTcpClient/build
