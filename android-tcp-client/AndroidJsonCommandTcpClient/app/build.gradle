@@ -25,5 +25,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'no.ntnu.datakomm:tools-lib:1.0'
+    compile 'org.json:json-org-lib:1.0'
     testCompile 'junit:junit:4.12'
 }
