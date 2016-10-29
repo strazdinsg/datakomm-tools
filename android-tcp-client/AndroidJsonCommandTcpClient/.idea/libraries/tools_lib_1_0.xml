@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="tools-lib-1.0">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/no/ntnu/datakomm/tools-lib/1.0/tools-lib-1.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
