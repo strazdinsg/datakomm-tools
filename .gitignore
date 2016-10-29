@@ -7,3 +7,4 @@ android-tcp-client/AndroidJsonCommandTcpClient/.gradle
 android-tcp-client/AndroidJsonCommandTcpClient/build
 /android-tcp-client/tcp-server-client-tools/nbproject/
 /android-tcp-client/tcp-server-client-tools/target/
+android-tcp-client/AndroidJsonCommandTcpClient/.idea
