@@ -11,15 +11,10 @@ import no.ntnu.alesund.JsonMarshalling;
 public class JsonMessage {
     private int type;
     private List<String> arguments = new LinkedList<>();
-    private static JsonMarshalling marshalling = null;
-    
-    public JsonMessage() {
-        // lazy-init the marshalling when the first message is created
-        if (marshalling == null) {
-            marshalling = new JsonMarshalling();
-            marshalling.setAlias("message");
-        }
-    }
+
+    // Singleton, lazy init. Always use only getMarshalling(), 
+    // do not touch this directly!
+    private static JsonMarshalling marshalling = null; 
     
     /**
      * Get type of the message. Application-specific
@@ -50,9 +45,19 @@ public class JsonMessage {
      * @return 
      */
     public String toJson() {
-        String json = marshalling.marshall(this, JsonMessage.class);
+        String json = getMarshalling().marshall(this, JsonMessage.class);
         // Remove newline characters
         return json.replace("\n", "");
+    }
+    
+    @Override
+    public String toString() {
+        String res = "Msg: type=" + type + ", args=[";
+        for (String arg : arguments) {
+            res += arg + " ";
+        }
+        res += "]";
+        return res;
     }
     
     /**
@@ -63,8 +68,8 @@ public class JsonMessage {
      * @return 
      */
     public static JsonMessage fromJson(String jsonString) {
-        JsonMessage msg = (JsonMessage) marshalling.unmarshall(jsonString, 
-                JsonMessage.class);
+        JsonMarshalling m = getMarshalling();
+        JsonMessage msg = (JsonMessage) m.unmarshall(jsonString, JsonMessage.class);
         return msg;
     }
     
@@ -102,5 +107,14 @@ public class JsonMessage {
     public boolean equals(JsonMessage m) {
         if (m == null) return false;
         return m.type == this.type && m.arguments.equals(this.arguments);
+    }
+    
+    private static JsonMarshalling getMarshalling() {
+        // lazy-init the marshalling when the first message is created
+        if (marshalling == null) {
+            marshalling = new JsonMarshalling();
+            marshalling.setAlias("message");
+        }
+        return marshalling;
     }
 }

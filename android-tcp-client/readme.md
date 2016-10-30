@@ -8,6 +8,7 @@ The easiest way to run these applications would be to use Android Studio and Net
 * Open the `json-org-lib`, `tools-lib`, `tcp-server-client-tools` and `JsonCommandTcpServer` as projects in Netbeans
 * Build them in Netbeans using "Clean and Build". Build them in the order as they appear here in the list
 * Run the Tcp server directly from Netbeans
+
 Android Studio:
 * Open the `AndroidJsonCommandTcpClient` project, build it and run it - on a real device or in a simulator.
 
