@@ -99,6 +99,20 @@ public class TcpClient extends HandlerThread {
         }
     }
 
+    @Override
+    public boolean quit() {
+        boolean res = super.quit();
+        if (socket != null) {
+            try {
+                socket.close();
+                Log.i(TAG, "TCP socket closed");
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return res;
+    }
+
     /**
      * Wait until the handler is initialized.
      *

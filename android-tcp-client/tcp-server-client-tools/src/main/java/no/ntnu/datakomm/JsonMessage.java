@@ -41,6 +41,10 @@ public class JsonMessage {
         this.arguments = arguments;
     }
     
+    public void clearArguments() {
+        arguments.clear();
+    }
+    
     /**
      * Take this object, serialize it as a Json String
      * @return 

@@ -10,22 +10,79 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="no.ntnu.datakomm.MainActivity">
 
-    <android.widget.VerticalSeekBar
-        android:id="@+id/seekbar1"
-        android:background="@null"
+    <EditText
         android:layout_width="wrap_content"
-        android:layout_height="150dip"
-        android:layout_marginRight="30dip"
-        />
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="localhost"
+        android:ems="10"
+        android:id="@+id/serverHost"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-    <android.widget.VerticalSeekBar
-        android:id="@+id/seekbar2"
-        android:background="@null"
+    <TextView
+        android:text="Server Host:"
         android:layout_width="wrap_content"
-        android:layout_height="150dip"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/seekbar1"
-        android:layout_toEndOf="@+id/seekbar1"
-        android:layout_marginLeft="52dp"
-        android:layout_marginStart="52dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Server TCP port:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:layout_below="@+id/serverHost"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/serverPort"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="5000" />
+
+    <Button
+        android:text="Connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/serverPort"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/connect" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar1"
+        android:layout_below="@+id/connect"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="21dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar2"
+        android:layout_below="@+id/seekBar1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="41dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

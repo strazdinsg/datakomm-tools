@@ -6,11 +6,13 @@ package no.ntnu.datakomm;
  */
 public class MsgType {
     // Sent from the client application
-    public static int SEND_COMMAND; // The client sends an actuation command
-    public static int READ_SENSORS; // The client requests to read specific sensors
+    public static final int SEND_COMMAND = 1; // The client sends an actuation command
+    public static final int READ_SENSORS = 2; // The client requests to read specific sensors
     
     // Sent from the server
-    public static int SENSOR_VALUES; // Server returns requested sensor values
-    public static int SERVER_STATE_CHANGED; // Server reports some state change
+    public static final int SERVER_INFO = 101; // Server returns some info regarding what version it is running, etc
+    public static final int SENSOR_VALUES = 102; // Server returns requested sensor values
+    public static final int SERVER_STATE_CHANGED = 103; // Server reports some state change
+    public static final int CMD_EXECUTED = 104; // Server returns requested sensor values
     
 }
