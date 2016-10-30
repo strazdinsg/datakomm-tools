@@ -46,7 +46,9 @@ public class JsonMessage {
      * @return 
      */
     public String toJson() {
-        return marshalling.marshall(this, JsonMessage.class);
+        String json = marshalling.marshall(this, JsonMessage.class);
+        // Remove newline characters
+        return json.replace("\n", "");
     }
     
     /**

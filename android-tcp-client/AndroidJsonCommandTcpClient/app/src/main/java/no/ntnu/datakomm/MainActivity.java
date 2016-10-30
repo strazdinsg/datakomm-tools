@@ -14,6 +14,7 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
+    // Default server's address and port
     private static final String SERVER_HOST = "192.168.1.57";
     private static final int SERVER_PORT = 5000;
 
@@ -110,7 +111,12 @@ public class MainActivity extends Activity {
      * @param position
      */
     private void sendSeekbarPos(int seekbarId, int position) {
-        String msg = "New position for seekbar " + seekbarId + ": " + position;
-        tcpClient.enqueueMessage(msg);
+//        String msg = "New position for seekbar " + seekbarId + ": " + position;
+        // Send a Command message. First - command type (seekbarId), then value
+        JsonMessage msg = new JsonMessage();
+        msg.setType(MsgType.SEND_COMMAND);
+        msg.addArgument("" + seekbarId);
+        msg.addArgument("" + position);
+        tcpClient.enqueueMessage(msg.toJson());
     }
 }
