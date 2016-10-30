@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VerticalSeekBar;
 
@@ -32,6 +33,8 @@ public class MainActivity extends Activity {
     private EditText etHost;
     private EditText etPort;
     private Button btConnect;
+    private TextView tvSensorTitle;
+    private TextView tvSensorVal;
 
     /**
      * Initialize all the necessary components
@@ -69,6 +72,9 @@ public class MainActivity extends Activity {
                         Feedback feedback = (Feedback) msg.obj;
                         handleFeedback(feedback);
                         break;
+                    case TcpClient.MSG_TYPE_SERVER_RESPONSE:
+                        JsonMessage serverMsg = (JsonMessage) msg.obj;
+                        handleServerResponse(serverMsg);
                 }
             }
         };
@@ -83,6 +89,30 @@ public class MainActivity extends Activity {
     }
 
     /**
+     * Handle a message received from the TCP server
+     * @param serverMsg
+     */
+    private void handleServerResponse(JsonMessage serverMsg) {
+        switch (serverMsg.getType()) {
+            case MsgType.SERVER_INFO:
+                // Server reports its info. Currently we expect only version to be reported
+                String version = serverMsg.getArgumentByIndex(0);
+                if (version != null) {
+                    Toast t = Toast.makeText(this, "Connected to Json Server " + version, Toast.LENGTH_LONG);
+                    t.show();
+                }
+                break;
+            case MsgType.SENSOR_VALUES:
+                // The server reports some sensor values
+                // Currently we expect a single simulated sensor
+                String sensorVal = serverMsg.getArgumentByIndex(0);
+                if (sensorVal != null) {
+                    tvSensorVal.setText(sensorVal);
+                }
+        }
+    }
+
+    /**
      * Initialize the GUI: seekbars, listeners etc
      */
     private void initGui() {
@@ -92,6 +122,8 @@ public class MainActivity extends Activity {
         etHost = (EditText) findViewById(R.id.serverHost);
         etPort = (EditText) findViewById(R.id.serverPort);
         btConnect = (Button) findViewById(R.id.connect);
+        tvSensorTitle = (TextView) findViewById(R.id.sensorTitle);
+        tvSensorVal = (TextView) findViewById(R.id.sensorVal);
 
         // Set some default values
         etHost.setText(DEFAULT_SERVER_HOST);
@@ -174,6 +206,8 @@ public class MainActivity extends Activity {
         // Connection established, can enable the controls
         seekBar1.setEnabled(true);
         seekBar2.setEnabled(true);
+        tvSensorTitle.setVisibility(View.VISIBLE);
+        tvSensorVal.setVisibility(View.VISIBLE);
 
         btConnect.setText("Disconnect");
         // TODO - implement disconnect

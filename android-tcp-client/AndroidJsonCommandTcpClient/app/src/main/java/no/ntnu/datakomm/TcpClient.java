@@ -6,6 +6,7 @@ import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -23,11 +24,14 @@ public class TcpClient extends HandlerThread {
     private static final int MSG_TYPE_CONNECT = 0; // Open TCP connection to the server
     private static final int MSG_TYPE_SEND = 1; // Send data to the server
     public static final int MSG_TYPE_FEEDBACK = 2; // Feedback from the background TCP thread to main GUI thread
+    public static final int MSG_TYPE_SERVER_RESPONSE = 3; // Feedback from the background TCP thread to main GUI thread
 
     private Handler mHandler;
     private Handler responseHandler;
+    private InputStream inputStream;
     private PrintWriter outputStream;
     private Socket socket;
+    private ReceivingThread receivingThread;
 
     /**
      * The HandlerThread requires us to specify a name for this thread
@@ -91,12 +95,18 @@ public class TcpClient extends HandlerThread {
                             String msgToSend = (String) msg.obj;
                             sendMessageToServer(msgToSend);
                             break;
+                        case MSG_TYPE_SERVER_RESPONSE:
+                            // Message from the TCP server, forward to GUI thread
+                            JsonMessage serverMsg = (JsonMessage) msg.obj;
+                            forwardServerResponseToGui(serverMsg);
+                            break;
                     }
                 }
             };
 
             notifyAll(); // Notify everyone that the handler has been created
         }
+
     }
 
     @Override
@@ -109,6 +119,9 @@ public class TcpClient extends HandlerThread {
             } catch (IOException e) {
                 return false;
             }
+        }
+        if (receivingThread != null) {
+            receivingThread.stopRunning();
         }
         return res;
     }
@@ -147,9 +160,14 @@ public class TcpClient extends HandlerThread {
         Log.i(TAG, "Connecting to server " + connInfo.getHost() + ":" + connInfo.getPort());
         try {
             socket = new Socket(connInfo.getHost(), + connInfo.getPort());
+            inputStream = socket.getInputStream();
             // The second parameter true means "auto flush"
             outputStream = new PrintWriter(socket.getOutputStream(), true);
             msg = "Connection to server successful";
+
+            // Start the receiving thread
+            receivingThread = new ReceivingThread(inputStream, mHandler);
+            receivingThread.start();
         } catch (IOException e) {
             ok = false;
             msg = "Could not open socket to " + connInfo.getHost() + ":" + connInfo.getPort()
@@ -201,4 +219,14 @@ public class TcpClient extends HandlerThread {
         }
     }
 
+    /**
+     * Forward a response from the TCP server to the main GUI thread
+     * @param msg
+     */
+    private void forwardServerResponseToGui(JsonMessage msg) {
+        Log.i(TAG, "Got response from server: " + msg);
+        if (responseHandler != null) {
+            responseHandler.obtainMessage(MSG_TYPE_SERVER_RESPONSE, msg).sendToTarget();
+        }
+    }
 }
