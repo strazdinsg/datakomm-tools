@@ -10,6 +10,10 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Encoder {
 
+    // Expected number of characters in every hash
+    private static final int MD5_NUM_CHARS = 32; 
+    private static final int SHA1_NUM_CHARS = 40; 
+    
     MessageDigest shaCript;
     MessageDigest md5Cript;
 
@@ -26,7 +30,7 @@ public class Encoder {
      * @return
      */
     public String md5(String plaintext) {
-        return this.genHash(plaintext, md5Cript);
+        return this.genHash(plaintext, md5Cript, MD5_NUM_CHARS);
     }
 
     /**
@@ -36,7 +40,7 @@ public class Encoder {
      * @return
      */
     public String sha1(String plaintext) {
-        return this.genHash(plaintext, shaCript);
+        return this.genHash(plaintext, shaCript, SHA1_NUM_CHARS);
     }
     
     /**
@@ -45,7 +49,8 @@ public class Encoder {
      * @param digest
      * @return 
      */
-    private String genHash(String plaintext, MessageDigest digest) {
+    private String genHash(String plaintext, MessageDigest digest, 
+            int expectedChars) {
         if (plaintext == null) {
             return null;
         }
@@ -57,7 +62,11 @@ public class Encoder {
         BigInteger bigInt = new BigInteger(1, d);
         String hashText = bigInt.toString(16);
         // Now we need to zero pad it if you actually want the full 32 chars.
-        while (hashText.length() < 32) {
+        // Girts' edit: The actual code was like this:
+//        while (hashText.length() < 32) {
+        // But it does not work correctly for SHA1. To make it correct,
+        // Check if the returned hash had expected number of characters
+        while (hashText.length() < expectedChars) {
             hashText = "0" + hashText;
         }
         return hashText;
