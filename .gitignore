@@ -10,3 +10,5 @@ android-tcp-client/AndroidJsonCommandTcpClient/build
 android-tcp-client/AndroidJsonCommandTcpClient/.idea
 /android-tcp-client/JsonCommandTcpServer/target/
 /MQTTExample/target/
+online-storage/.idea/
+online-storage/dbconn.php
