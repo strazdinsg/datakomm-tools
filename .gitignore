@@ -12,3 +12,4 @@ android-tcp-client/AndroidJsonCommandTcpClient/.idea
 /MQTTExample/target/
 online-storage/.idea/
 online-storage/dbconn.php
+/ThreadExamples/target/
