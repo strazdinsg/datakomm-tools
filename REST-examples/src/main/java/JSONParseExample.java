@@ -106,7 +106,7 @@ public class JSONParseExample {
 
     private static void nestedJsonExample() {
         System.out.println("--------------------------------------------------");
-        System.out.println("Test JSON Object which has another array inside");
+        System.out.println("Test JSON Array with objects inside");
         System.out.println("--------------------------------------------------");
 
         // JSON supports hierarchy. Objects can be placed inside arrays, arrays 

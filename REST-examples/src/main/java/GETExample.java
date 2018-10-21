@@ -3,17 +3,20 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 
+/**
+ * An example showing how to send HTTP GET and read the response from the server
+ */
 public class GETExample {
 
     public static void main(String[] args) {
-        GETExample postExample = new GETExample("104.248.47.74", 80);
-        postExample.doExampleGet();
+        GETExample example = new GETExample("104.248.47.74", 80);
+        example.doExampleGet();
     }
 
     private String BASE_URL; // Base URL (address) of the server
 
     /**
-     * Create an HTTP POST example
+     * Create an HTTP GET example
      *
      * @param host Will send request to this host: IP address or domain
      * @param port Will use this port
@@ -23,16 +26,15 @@ public class GETExample {
     }
 
     /**
-     * Post three random numbers to a specific path on the web server
+     * Send an HTTP GET to a specific path on the web server
      */
     public void doExampleGet() {
-        System.out.println("Posting this GET to server");
         // TODO: change path to something correct
         sendGet("dkrest/test/get");
     }
 
     /**
-     * Send HTTP POST
+     * Send HTTP GET
      *
      * @param path     Relative path in the API.
      */
