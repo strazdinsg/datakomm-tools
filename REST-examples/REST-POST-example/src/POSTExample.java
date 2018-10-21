@@ -87,8 +87,8 @@ public class POSTExample {
 
     /**
      * Read the whole content from an InputStream, return it as a string
-     * @param is
-     * @return
+     * @param is Inputstream to read the body from
+     * @return The whole body as a string
      */
     private String convertStreamToString(InputStream is) {
         BufferedReader in = new BufferedReader(new InputStreamReader(is));
@@ -101,7 +101,6 @@ public class POSTExample {
             }
         } catch (IOException ex) {
             System.out.println("Could not read the data from HTTP response: " + ex.getMessage());
-        } finally {
         }
         return response.toString();
     }
