@@ -16,3 +16,4 @@ online-storage/dbconn.php
 REST-examples/REST-POST-example/.idea/
 *.class
 *.iml
+/REST-examples/REST-POST-example/target/
