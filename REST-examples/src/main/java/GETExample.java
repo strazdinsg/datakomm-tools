@@ -3,11 +3,11 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class POSTExample {
+public class GETExample {
 
     public static void main(String[] args) {
-        POSTExample postExample = new POSTExample("104.248.47.74", 80);
-        postExample.post3RandomNumbers();
+        GETExample postExample = new GETExample("104.248.47.74", 80);
+        postExample.doExampleGet();
     }
 
     private String BASE_URL; // Base URL (address) of the server
@@ -18,55 +18,36 @@ public class POSTExample {
      * @param host Will send request to this host: IP address or domain
      * @param port Will use this port
      */
-    public POSTExample(String host, int port) {
+    public GETExample(String host, int port) {
         BASE_URL = "http://" + host + ":" + port + "/";
     }
 
     /**
      * Post three random numbers to a specific path on the web server
      */
-    public void post3RandomNumbers() {
-        int a = (int) Math.round(Math.random() * 100);
-        int b = (int) Math.round(Math.random() * 100);
-        int c = (int) Math.round(Math.random() * 100);
-
-        StringBuilder json = new StringBuilder();
-        json.append("{");
-        json.append(" \"a\": ").append(a);
-        json.append(", \"b\": ").append(b);
-        json.append(", \"c\": ").append(c);
-        json.append(" }");
-        System.out.println("Posting this JSON data to server");
-        System.out.println(json.toString());
+    public void doExampleGet() {
+        System.out.println("Posting this GET to server");
         // TODO: change path to something correct
-        sendPost("dkrest/auth", json.toString());
+        sendGet("dkrest/test/get");
     }
 
     /**
      * Send HTTP POST
      *
      * @param path     Relative path in the API.
-     * @param jsonData The data in JSON format that will be posted to the server
      */
-    private void sendPost(String path, String jsonData) {
+    private void sendGet(String path) {
         try {
             String url = BASE_URL + path;
             URL urlObj = new URL(url);
-            System.out.println("Sending HTTP POST to " + url);
+            System.out.println("Sending HTTP GET to " + url);
             HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
 
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setDoOutput(true);
-
-            OutputStream os = con.getOutputStream();
-            os.write(jsonData.getBytes());
-            os.flush();
+            con.setRequestMethod("GET");
 
             int responseCode = con.getResponseCode();
             if (responseCode == 200) {
                 System.out.println("Server reached");
-
                 // Response was OK, read the body (data)
                 InputStream stream = con.getInputStream();
                 String responseBody = convertStreamToString(stream);
@@ -78,7 +59,7 @@ public class POSTExample {
                 System.out.println("Request failed, response code: " + responseCode + " (" + responseDescription + ")");
             }
         } catch (ProtocolException e) {
-            System.out.println("Protocol nto supported by the server");
+            System.out.println("Protocol not supported by the server");
         } catch (IOException e) {
             System.out.println("Something went wrong: " + e.getMessage());
             e.printStackTrace();
