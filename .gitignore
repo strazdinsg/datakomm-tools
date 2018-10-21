@@ -13,3 +13,6 @@ android-tcp-client/AndroidJsonCommandTcpClient/.idea
 online-storage/.idea/
 online-storage/dbconn.php
 /ThreadExamples/target/
+REST-examples/REST-POST-example/.idea/
+*.class
+*.iml
