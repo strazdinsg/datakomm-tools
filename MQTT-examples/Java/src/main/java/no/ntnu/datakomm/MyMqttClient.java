@@ -19,7 +19,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MyMqttClient implements MqttCallback {
 
     //The protocol, address and port of the server
-    static final String SERVER_ADDRESS = "tcp://158.38.101.192:1883";
+    static final String SERVER_ADDRESS = "tcp://broker.hivemq.com:1883";
     //name used to identify yourself with the server, should be unique
     static final String MY_NAME = "Darth Waiter";
 
@@ -44,7 +44,7 @@ public class MyMqttClient implements MqttCallback {
             client.connect();
 
             //We subscribe to a topic
-            client.subscribe("exampletopic");
+            client.subscribe("/ntnu/datakomm/#");
 
             // The reception of incomming messages will happen in another thread,
             // the messageArrived() method will be called. 
@@ -52,7 +52,7 @@ public class MyMqttClient implements MqttCallback {
             //We publish to the same topic
             String messageString = "Hello MQTT";
             MqttMessage message = new MqttMessage(messageString.getBytes());
-            client.publish("exampletopic", message);
+            client.publish("/ntnu/datakomm/ping", message);
             System.out.println("Sending message 'Hello!' (in the main thread)");
 
             System.out.println("Waiting for incomming messages...");

@@ -17,3 +17,5 @@ online-storage/dbconn.php
 *.iml
 /REST-examples/target/
 REST-examples/.idea/
+/MQTT-examples/Java/target/
+*.lck
