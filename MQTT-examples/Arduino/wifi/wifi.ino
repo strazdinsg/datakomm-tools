@@ -9,8 +9,8 @@
 char ssid[]     = "your-wifi-SSID";
 char password[] = "your-wifi-password";
 
-// IP address of the MQTT broker (server)
-IPAddress serverIP(52, 58, 218, 138);
+// Host and port of the MQTT broker (server)
+char serverHost[] = "broker.hivemq.com";
 unsigned int serverPort = 1883;
 
 WiFiClient wificlient;
@@ -24,7 +24,7 @@ void setup() {
     delay(100);
   }
   Serial.println("\nConnected");
-  mqttclient.setServer(serverIP, serverPort);
+  mqttclient.setServer(serverHost, serverPort);
   Serial.println("Connecting to MQTT server");
   while (!mqttclient.connected()){
     mqttclient.connect("TestNode1762"); //name MUST BE unique
