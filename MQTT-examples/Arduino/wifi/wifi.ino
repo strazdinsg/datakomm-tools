@@ -10,7 +10,7 @@ char ssid[]     = "your-wifi-SSID";
 char password[] = "your-wifi-password";
 
 // IP address of the MQTT broker (server)
-IPAddress serverIP(18, 197, 2, 56);
+IPAddress serverIP(52, 58, 218, 138);
 unsigned int serverPort = 1883;
 
 WiFiClient wificlient;
