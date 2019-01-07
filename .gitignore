@@ -19,3 +19,11 @@ online-storage/dbconn.php
 REST-examples/.idea/
 /MQTT-examples/Java/target/
 *.lck
+/deprecated/lab04/target/
+deprecated/json-org-lib/.idea/
+deprecated/json-org-lib/target/
+deprecated/TestApps/.idea/
+deprecated/TestApps/target/
+deprecated/tools-lib/.idea/
+deprecated/tools-lib/target/classes/.netbeans_automatic_build
+deprecated/tools-lib/target/
