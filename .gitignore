@@ -29,3 +29,4 @@ deprecated/tools-lib/target/classes/.netbeans_automatic_build
 deprecated/tools-lib/target/
 
 ThreadExamples/.idea/
+MQTT-examples/Java/\.idea/

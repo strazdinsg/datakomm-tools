@@ -8,7 +8,8 @@ import java.net.URL;
 public class POSTExample {
 
     public static void main(String[] args) {
-        POSTExample postExample = new POSTExample("104.248.47.74", 80);
+        // TODO: set correct host (domain or IP address) and TCP port
+        POSTExample postExample = new POSTExample("datakomm.work", 80);
         postExample.post3RandomNumbers();
     }
 

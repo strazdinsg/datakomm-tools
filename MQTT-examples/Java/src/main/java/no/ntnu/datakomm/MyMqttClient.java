@@ -19,16 +19,16 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MyMqttClient implements MqttCallback {
 
     //The protocol, address and port of the server
-    static final String SERVER_ADDRESS = "tcp://broker.hivemq.com:1883";
+    private static final String SERVER_ADDRESS = "tcp://broker.hivemq.com:1883";
     //name used to identify yourself with the server, should be unique
-    static final String MY_NAME = "Darth Waiter";
+    private static final String MY_NAME = "Darth Waiter";
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         MyMqttClient clientInstance = new MyMqttClient();
         clientInstance.run();
     }
 
-    void run() {
+    private void run() {
         MqttClient client = null;
 
         //First we try to create a mqtt client with the server's address and our selected name
@@ -79,7 +79,7 @@ public class MyMqttClient implements MqttCallback {
      * This method is called (in another child thread) when MQTT connection is
      * lost
      *
-     * @param cause
+     * @param cause Reason for closing the connection
      */
     @Override
     public void connectionLost(Throwable cause) {

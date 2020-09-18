@@ -9,7 +9,8 @@ import java.net.URL;
 public class GETExample {
 
     public static void main(String[] args) {
-        GETExample example = new GETExample("104.248.47.74", 80);
+        // TODO: set correct host (domain or IP address) and TCP port
+        GETExample example = new GETExample("datakomm.work", 80);
         example.doExampleGet();
     }
 
