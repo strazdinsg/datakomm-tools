@@ -30,3 +30,7 @@ deprecated/tools-lib/target/
 
 ThreadExamples/.idea/
 MQTT-examples/Java/\.idea/
+
+PythonThreads/.idea/
+
+PythonThreads/venv/
