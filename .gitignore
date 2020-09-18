@@ -27,3 +27,5 @@ deprecated/TestApps/target/
 deprecated/tools-lib/.idea/
 deprecated/tools-lib/target/classes/.netbeans_automatic_build
 deprecated/tools-lib/target/
+
+ThreadExamples/.idea/

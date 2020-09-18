@@ -1,5 +1,7 @@
 package no.ntnu.datakomm;
 
+import java.util.Random;
+
 /**
  * This example shows one option to run code in a new thread: create runnable
  * methods on the fly with lambda expressions. This approach is usable if you
@@ -7,6 +9,7 @@ package no.ntnu.datakomm;
  * you don't want your class to have yet another interface to implement.
  */
 public class OptionCLambda {
+    Random random = new Random();
 
     public static void main(String[] args) throws InterruptedException {
         // We create an object first to get access to it's methods
@@ -48,7 +51,7 @@ public class OptionCLambda {
         for (int i = 1; i <= iterationCount; ++i) {
             System.out.println("Thread #" + currentThreadId + " iteration " + i);
             // Sleep some random time
-            int sleepTime = 1000 + (int) (Math.random() * 2000);
+            int sleepTime = 1000 + random.nextInt(2000);
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException ex) {

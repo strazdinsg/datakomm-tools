@@ -1,5 +1,7 @@
 package no.ntnu.datakomm;
 
+import java.util.Random;
+
 /**
  * This example shows one option to run code in a new thread: create a class
  * that extends the Thread class.
@@ -7,6 +9,7 @@ package no.ntnu.datakomm;
  * We simulate some long calculations to demonstrate parallel execution.
  */
 public class OptionAThread extends Thread {
+    Random random = new Random();
 
     public static void main(String[] args) throws InterruptedException {
         // Start three calculation threads in parallel
@@ -29,7 +32,7 @@ public class OptionAThread extends Thread {
         for (int i = 0; i < 5; ++i) {
             System.out.println("Thread #" + currentThreadId + " calculating something...");
             // Sleep some random time
-            int sleepTime = 1000 + (int) (Math.random() * 2000);
+            int sleepTime = 1000 + random.nextInt(2000);
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException ex) {
