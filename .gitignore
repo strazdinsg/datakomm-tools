@@ -36,3 +36,7 @@ PythonThreads/.idea/
 PythonThreads/venv/
 
 PythonSockets/.idea/
+
+LiveCodingPython/.idea/
+
+LiveCodingPython/__pycache__/
