@@ -34,3 +34,5 @@ MQTT-examples/Java/\.idea/
 PythonThreads/.idea/
 
 PythonThreads/venv/
+
+PythonSockets/.idea/
