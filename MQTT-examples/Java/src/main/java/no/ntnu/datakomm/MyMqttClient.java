@@ -1,6 +1,7 @@
 package no.ntnu.datakomm;
 
 import java.io.IOException;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -18,9 +19,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
  */
 public class MyMqttClient implements MqttCallback {
 
-    //The protocol, address and port of the server
-    private static final String SERVER_ADDRESS = "tcp://broker.hivemq.com:1883";
-    //name used to identify yourself with the server, should be unique
+    // The protocol, address and port of the server
+    private static final String SERVER_ADDRESS = "tcp://129.241.152.12:1883";
+    // Name used to identify yourself with the server, should be unique
     private static final String MY_NAME = "Darth Waiter";
 
     public static void main(String[] args) {
@@ -31,28 +32,28 @@ public class MyMqttClient implements MqttCallback {
     private void run() {
         MqttClient client = null;
 
-        //First we try to create a mqtt client with the server's address and our selected name
+        // First we try to create a mqtt client with the server's address and our selected name
         try {
             client = new MqttClient(SERVER_ADDRESS, MY_NAME);
 
-            //We give the client an object implementing the "MqttCallback"-interface,
-            //This object has the functions that the client calls when something happens:
-            // the is connection lost, a message is sendt or a message is received
+            // We give the client an object implementing the "MqttCallback"-interface,
+            // This object has the functions that the client calls when something happens:
+            // the is connection lost, a message is sent or a message is received
             client.setCallback(this);
 
-            //Then we try to make the connection with the server
+            // Then we try to connect to the server
             client.connect();
 
-            //We subscribe to a topic
-            client.subscribe("/ntnu/datakomm/#");
+            // We subscribe to a topic - any topic which has ntnu/datakomm in the beginning
+            client.subscribe("ntnu/datakomm/#");
 
             // The reception of incomming messages will happen in another thread,
             // the messageArrived() method will be called. 
-            // Meanwhile we can do other stuff in this thread
-            //We publish to the same topic
+            // Meanwhile, we can do other stuff in this thread
+            // We publish to the same topic
             String messageString = "Hello MQTT";
             MqttMessage message = new MqttMessage(messageString.getBytes());
-            client.publish("/ntnu/datakomm/ping", message);
+            client.publish("ntnu/datakomm/ping", message);
             System.out.println("Sending message 'Hello!' (in the main thread)");
 
             System.out.println("Waiting for incomming messages...");
@@ -61,7 +62,7 @@ public class MyMqttClient implements MqttCallback {
             // This will block until user presses <Enter>
             System.in.read();
 
-            //We then disconnect from the server, and close the client
+            // We then disconnect from the server, and close the client
             client.disconnect();
             client.close();
 
@@ -90,14 +91,14 @@ public class MyMqttClient implements MqttCallback {
      * This method is called (in another child thread) when a message is
      * received from the MQTT server
      *
-     * @param topic the topic on which the message was received
+     * @param topic   the topic on which the message was received
      * @param message the received message
      */
     @Override
     public void messageArrived(String topic, MqttMessage message) {
         System.out.println("Received message from server (in child thread):");
-        System.out.println("    From topic:   " + topic);
-        System.out.println("    With message: " + new String(message.getPayload()));
+        System.out.println("    Topic:   " + topic);
+        System.out.println("    Message: " + new String(message.getPayload()));
     }
 
     /**
