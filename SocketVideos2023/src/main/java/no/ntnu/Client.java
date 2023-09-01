@@ -30,10 +30,15 @@ public class Client {
 
   private void run() {
     if (connect()) {
-      receiveVersion();
-      sendAndReceive("Hello, World!");
-      sendAndReceive("My name is Chuck Norris");
-      sendAndReceive("shutdown");
+      sendAndReceive("version");
+      sendAndReceive("echo My name is Chuck Norris");
+      sendAndReceive("echo");
+      sendAndReceive("add 2 3");
+      sendAndReceive("add 12 32");
+      sendAndReceive("add 12 32 45");
+      sendAndReceive("add ab 32");
+      sendAndReceive("add 12 c");
+      sendAndReceive("add 12c 44");
       disconnect();
     }
     System.out.println("Exiting...");
