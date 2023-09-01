@@ -5,8 +5,12 @@ import static no.ntnu.Server.TCP_PORT;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import no.ntnu.command.AddCommand;
+import no.ntnu.command.Command;
+import no.ntnu.command.EchoCommand;
+import no.ntnu.command.VersionCommand;
 
 /**
  * TCP Client.
@@ -14,8 +18,8 @@ import java.net.Socket;
 public class Client {
   private static final String SERVER_HOST = "localhost";
   private Socket socket;
-  private PrintWriter socketWriter;
   private BufferedReader socketReader;
+  private ObjectOutputStream objectWriter;
 
 
   /**
@@ -30,26 +34,16 @@ public class Client {
 
   private void run() {
     if (connect()) {
-      sendAndReceive("version");
-      sendAndReceive("echo My name is Chuck Norris");
-      sendAndReceive("echo");
-      sendAndReceive("add 2 3");
-      sendAndReceive("add 12 32");
-      sendAndReceive("add 12 32 45");
-      sendAndReceive("add ab 32");
-      sendAndReceive("add 12 c");
-      sendAndReceive("add 12c 44");
+      sendAndReceive(new VersionCommand());
+      sendAndReceive(new EchoCommand("My name is Chuck Norris"));
+      sendAndReceive(new AddCommand(2, 3));
+      sendAndReceive(new AddCommand(22, 32));
       disconnect();
     }
     System.out.println("Exiting...");
   }
 
-  private void receiveVersion() {
-    String version = receiveOneLineFromServer();
-    System.out.println("Version: " + version);
-  }
-
-  private void sendAndReceive(String command) {
+  private void sendAndReceive(Command command) {
     if (sendToServer(command)) {
       String response = receiveOneLineFromServer();
       if (response != null) {
@@ -68,7 +62,7 @@ public class Client {
     try {
       socket = new Socket(SERVER_HOST, TCP_PORT);
       socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      socketWriter = new PrintWriter(socket.getOutputStream(), true);
+      objectWriter = new ObjectOutputStream(socket.getOutputStream());
       System.out.println("Connection established");
       success = true;
     } catch (IOException e) {
@@ -84,10 +78,10 @@ public class Client {
    * @param message The message to send
    * @return True when the message is successfully sent, false on error.
    */
-  private boolean sendToServer(String message) {
+  private boolean sendToServer(Command message) {
     boolean sent = false;
     try {
-      socketWriter.println(message);
+      objectWriter.writeObject(message);
       sent = true;
     } catch (Exception e) {
       System.err.println("Error while sending the message: " + e.getMessage());

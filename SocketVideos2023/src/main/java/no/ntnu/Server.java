@@ -22,7 +22,7 @@ public class Server {
       isRunning = true;
       while (isRunning) {
         Socket clientSocket = acceptNextClient();
-        ClientHandler clientHandler = new ClientHandler(this, clientSocket);
+        ClientHandler clientHandler = new ClientHandler(clientSocket);
         clientHandler.run();
       }
     }

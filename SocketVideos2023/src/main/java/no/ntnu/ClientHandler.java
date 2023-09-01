@@ -1,18 +1,21 @@
 package no.ntnu;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import no.ntnu.command.AddCommand;
+import no.ntnu.command.Command;
+import no.ntnu.command.EchoCommand;
+import no.ntnu.command.VersionCommand;
 
 /**
  * Handle one TCP client connection.
  */
 public class ClientHandler {
-  private final Server server;
+  private static final String VERSION_RESPONSE = "Server_V1.0";
   private final Socket clientSocket;
-  private BufferedReader socketReader;
+  private ObjectInputStream objectReader;
   private PrintWriter socketWriter;
 
   /**
@@ -20,9 +23,8 @@ public class ClientHandler {
    *
    * @param clientSocket The TCP socket associated with this client
    */
-  public ClientHandler(Server server, Socket clientSocket) {
+  public ClientHandler(Socket clientSocket) {
     this.clientSocket = clientSocket;
-    this.server = server;
     System.out.println("Client connected from " + clientSocket.getRemoteSocketAddress()
         + ", port " + clientSocket.getPort());
   }
@@ -48,8 +50,8 @@ public class ClientHandler {
   private boolean establishStreams() {
     boolean success = false;
     try {
-      socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+      objectReader = new ObjectInputStream(clientSocket.getInputStream());
       success = true;
     } catch (IOException e) {
       System.err.println("Error while processing the client: " + e.getMessage());
@@ -57,12 +59,8 @@ public class ClientHandler {
     return success;
   }
 
-  private String getVersionResponse() {
-    return "Server_V1.0";
-  }
-
   private void handleClientRequests() {
-    String command;
+    Command command;
     boolean shouldContinue;
     do {
       command = receiveClientCommand();
@@ -75,12 +73,14 @@ public class ClientHandler {
    *
    * @return The client command, null on error
    */
-  private String receiveClientCommand() {
-    String command = null;
+  private Command receiveClientCommand() {
+    Command command = null;
     try {
-      command = socketReader.readLine();
+      command = (Command) objectReader.readObject();
     } catch (IOException e) {
       System.err.println("Error while receiving data from the client: " + e.getMessage());
+    } catch (ClassNotFoundException e) {
+      System.err.println("An object of invalid class received: " + e.getMessage());
     }
     return command;
   }
@@ -92,7 +92,7 @@ public class ClientHandler {
    * @return True when the command is handled, and we should continue receiving next
    *     commands from the client.
    */
-  private boolean handleCommand(String command) {
+  private boolean handleCommand(Command command) {
     boolean shouldContinue = true;
     System.out.println("Command from the client: " + command);
 
@@ -101,22 +101,14 @@ public class ClientHandler {
     if (command == null) {
       shouldContinue = false;
     } else {
-      String[] commandParts = command.split(" ", 2);
-      if (commandParts.length >= 1) {
-        String commandType = commandParts[0];
-        switch (commandType) {
-          case "version":
-            response = getVersionResponse();
-            break;
-          case "echo":
-            response = handleEchoCommand(commandParts);
-            break;
-          case "add":
-            response = handleAddCommand(commandParts);
-            break;
-          default:
-            response = "Unknown command";
-        }
+      if (command instanceof VersionCommand) {
+        response = VERSION_RESPONSE;
+      } else if (command instanceof EchoCommand echoCommand) {
+        response = echoCommand.getMessage();
+      } else if (command instanceof AddCommand addCommand) {
+        response = "" + addCommand.getSum();
+      } else {
+        response = "Unknown command";
       }
     }
 
@@ -124,53 +116,6 @@ public class ClientHandler {
       sendToClient(response);
     }
     return shouldContinue;
-  }
-
-  private String handleAddCommand(String[] commandParts) {
-    String response;
-    if (commandParts.length >= 2) {
-      String[] xy = commandParts[1].split(" ");
-      if (xy.length == 2) {
-        Integer x = parseInteger(xy[0]);
-        Integer y = parseInteger(xy[1]);
-        if (x != null && y != null) {
-          response = "" + (x + y);
-        } else {
-          response = "Invalid add-command: the arguments are not integers";
-        }
-      } else {
-        response = "Invalid number of arguments for the add-command, two expected";
-      }
-    } else {
-      response = "Invalid add-command format: the x and y arguments are missing!";
-    }
-    return response;
-  }
-
-  private static String handleEchoCommand(String[] commandParts) {
-    String response;
-    if (commandParts.length >= 2) {
-      response = commandParts[1]; // Repeat the original message from the client
-    } else {
-      response = "Invalid echo-command format: the message is missing!";
-    }
-    return response;
-  }
-
-  /**
-   * Interpret the parameter s as an integer.
-   *
-   * @param s The string containing an integer
-   * @return The integer value of s, or null if it is not a valid integer
-   */
-  private Integer parseInteger(String s) {
-    Integer result = null;
-    try {
-      result = Integer.valueOf(s);
-    } catch (NumberFormatException e) {
-      System.err.println("Invalid number format: " + s);
-    }
-    return result;
   }
 
   private void sendToClient(String message) {
