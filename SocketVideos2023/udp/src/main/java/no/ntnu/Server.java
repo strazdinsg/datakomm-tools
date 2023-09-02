@@ -1,15 +1,15 @@
 package no.ntnu;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 /**
- * A TCP server, handles multiple clients.
+ * A UDP server, handles multiple clients.
  */
 public class Server {
-  public static final int TCP_PORT = 1235;
-  private ServerSocket serverSocket;
+  public static final int UDP_PORT = 1235;
+  private DatagramSocket serverSocket;
   private boolean isRunning;
 
   public static void main(String[] args) {
@@ -21,9 +21,11 @@ public class Server {
     if (openListeningSocket()) {
       isRunning = true;
       while (isRunning) {
-        Socket clientSocket = acceptNextClient();
-        ClientHandler clientHandler = new ClientHandler(clientSocket);
-        clientHandler.run();
+        DatagramPacket clientPacket = receiveNextClientPacket();
+        if (clientPacket != null) {
+          ClientHandler clientHandler = new ClientHandler(clientPacket, serverSocket);
+          clientHandler.run();
+        }
       }
     }
 
@@ -39,24 +41,26 @@ public class Server {
   private boolean openListeningSocket() {
     boolean success = false;
     try {
-      serverSocket = new ServerSocket(TCP_PORT);
-      System.out.println("Server listening on port " + TCP_PORT);
+      serverSocket = new DatagramSocket(UDP_PORT);
+      System.out.println("Server listening on port " + UDP_PORT);
       success = true;
     } catch (IOException e) {
-      System.err.println("Could not open a listening socket on port " + TCP_PORT
+      System.err.println("Could not open a listening socket on port " + UDP_PORT
           + ", reason: " + e.getMessage());
     }
     return success;
   }
 
-  private Socket acceptNextClient() {
-    Socket clientSocket = null;
+  private DatagramPacket receiveNextClientPacket() {
+    byte[] dataBuffer = new byte[1024];
+    DatagramPacket packet = new DatagramPacket(dataBuffer, dataBuffer.length);
     try {
-      clientSocket = serverSocket.accept();
+      serverSocket.receive(packet);
     } catch (IOException e) {
-      System.err.println("Could not accept the next client: " + e.getMessage());
+      System.err.println("Could not receive data from a client: " + e.getMessage());
+      packet = null;
     }
-    return clientSocket;
+    return packet;
   }
 
   /**
