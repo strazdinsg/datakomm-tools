@@ -1,25 +1,25 @@
 package no.ntnu;
 
-import static no.ntnu.Server.TCP_PORT;
+import static no.ntnu.Server.UDP_PORT;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 
 /**
- * TCP Client.
+ * UDP Client.
  */
 public class Client {
   private static final String SERVER_HOST = "localhost";
-  private Socket socket;
-  private PrintWriter socketWriter;
-  private BufferedReader socketReader;
+
+  DatagramSocket udpSocket;
+  private InetAddress serverIp;
 
 
   /**
-   * Run the web client.
+   * Run the client application.
    *
    * @param args Command line arguments. Not used.
    */
@@ -29,7 +29,7 @@ public class Client {
   }
 
   private void run() {
-    if (connect()) {
+    if (initializeDatagramSocket()) {
       sendAndReceive("version");
       sendAndReceive("echo My name is Chuck Norris");
       sendAndReceive("echo");
@@ -39,19 +39,13 @@ public class Client {
       sendAndReceive("add ab 32");
       sendAndReceive("add 12 c");
       sendAndReceive("add 12c 44");
-      disconnect();
     }
     System.out.println("Exiting...");
   }
 
-  private void receiveVersion() {
-    String version = receiveOneLineFromServer();
-    System.out.println("Version: " + version);
-  }
-
   private void sendAndReceive(String command) {
     if (sendToServer(command)) {
-      String response = receiveOneLineFromServer();
+      String response = receiveFromServer();
       if (response != null) {
         System.out.println("Server's response: " + response);
       }
@@ -59,27 +53,24 @@ public class Client {
   }
 
   /**
-   * Establish a connection to a TCP server (web server).
+   * Prepare UDP socket for communication.
    *
    * @return True on success, false on error.
    */
-  private boolean connect() {
+  private boolean initializeDatagramSocket() {
     boolean success = false;
     try {
-      socket = new Socket(SERVER_HOST, TCP_PORT);
-      socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      socketWriter = new PrintWriter(socket.getOutputStream(), true);
-      System.out.println("Connection established");
+      udpSocket = new DatagramSocket();
+      serverIp = InetAddress.getByName(SERVER_HOST);
       success = true;
     } catch (IOException e) {
-      System.err.println("Could not connect to the server: " + e.getMessage());
+      System.err.println("Could not create a UDP socket: " + e.getMessage());
     }
     return success;
   }
 
   /**
-   * Send a message to the TCP server.
-   * We assume that the connection is already established.
+   * Send a message to the UDP server.
    *
    * @param message The message to send
    * @return True when the message is successfully sent, false on error.
@@ -87,9 +78,12 @@ public class Client {
   private boolean sendToServer(String message) {
     boolean sent = false;
     try {
-      socketWriter.println(message);
+      byte[] dataToSend = message.getBytes();
+      DatagramPacket packetToSend = new DatagramPacket(dataToSend, 0, dataToSend.length,
+          serverIp, UDP_PORT);
+      udpSocket.send(packetToSend);
       sent = true;
-    } catch (Exception e) {
+    } catch (IOException e) {
       System.err.println("Error while sending the message: " + e.getMessage());
     }
     return sent;
@@ -100,29 +94,18 @@ public class Client {
    *
    * @return The received line or null on error.
    */
-  private String receiveOneLineFromServer() {
+  private String receiveFromServer() {
     String response = null;
     try {
-      response = socketReader.readLine();
+      byte[] dataBuffer = new byte[200];
+      DatagramPacket receivedPacket = new DatagramPacket(dataBuffer, dataBuffer.length);
+      udpSocket.receive(receivedPacket);
+      response = new String(receivedPacket.getData(), 0, receivedPacket.getLength(),
+          StandardCharsets.UTF_8);
     } catch (IOException e) {
       System.err.println("Error while receiving data from the server: " + e.getMessage());
     }
     return response;
   }
 
-  /**
-   * Close the TCP connection.
-   */
-  private void disconnect() {
-    try {
-      if (socket != null) {
-        socket.close();
-        System.out.println("Socket closed");
-      } else {
-        System.err.println("Can't close a socket which has not been open");
-      }
-    } catch (IOException e) {
-      System.err.println("Could not close the socket: " + e.getMessage());
-    }
-  }
 }

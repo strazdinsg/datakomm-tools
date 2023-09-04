@@ -1,16 +1,16 @@
 package no.ntnu;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 /**
- * A TCP server, handles multiple clients.
+ * A UDP server, handles multiple clients.
  */
 public class Server {
-  public static final int TCP_PORT = 1235;
-  private ServerSocket serverSocket;
+  public static final int UDP_PORT = 1235;
   private boolean isRunning;
+  private DatagramSocket udpSocket;
 
   public static void main(String[] args) {
     Server server = new Server();
@@ -21,15 +21,16 @@ public class Server {
     if (openListeningSocket()) {
       isRunning = true;
       while (isRunning) {
-        Socket clientSocket = acceptNextClient();
-        ClientHandler clientHandler = new ClientHandler(clientSocket);
-        clientHandler.run();
+        DatagramPacket clientDatagram = receiveClientDatagram();
+        if (clientDatagram != null) {
+          DatagramHandler datagramHandler = new DatagramHandler(udpSocket, clientDatagram);
+          datagramHandler.run();
+        }
       }
     }
 
     System.out.println("Server exiting...");
   }
-
 
   /**
    * Open a listening TCP socket.
@@ -39,30 +40,26 @@ public class Server {
   private boolean openListeningSocket() {
     boolean success = false;
     try {
-      serverSocket = new ServerSocket(TCP_PORT);
-      System.out.println("Server listening on port " + TCP_PORT);
+      udpSocket = new DatagramSocket(UDP_PORT);
+      System.out.println("Server listening on port " + UDP_PORT);
       success = true;
     } catch (IOException e) {
-      System.err.println("Could not open a listening socket on port " + TCP_PORT
+      System.err.println("Could not open a listening socket on port " + UDP_PORT
           + ", reason: " + e.getMessage());
     }
     return success;
   }
 
-  private Socket acceptNextClient() {
-    Socket clientSocket = null;
+  private DatagramPacket receiveClientDatagram() {
+    byte[] receivedData = new byte[200];
+    DatagramPacket clientDatagram = new DatagramPacket(receivedData, receivedData.length);
     try {
-      clientSocket = serverSocket.accept();
+      udpSocket.receive(clientDatagram);
     } catch (IOException e) {
-      System.err.println("Could not accept the next client: " + e.getMessage());
+      System.err.println("Error while receiving client datagram: " + e.getMessage());
+      clientDatagram = null;
     }
-    return clientSocket;
+    return clientDatagram;
   }
 
-  /**
-   * Shut down the server.
-   */
-  public void shutdown() {
-    isRunning = false;
-  }
 }
