@@ -46,3 +46,7 @@ SocketVideos2023/.idea/
 SocketVideos2023/udp/.idea/
 
 SocketVideos2023/bad-traffic-light/.idea/
+
+.DS_Store
+
+SocketVideos2023/tcp/.idea/
