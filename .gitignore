@@ -1,52 +1,17 @@
-/tools-lib/target/
-/TestApps/target/
-json-org-lib/target
-/lab04/target/
-/ModBusTest/target/
-android-tcp-client/AndroidJsonCommandTcpClient/.gradle
-android-tcp-client/AndroidJsonCommandTcpClient/build
-/android-tcp-client/tcp-server-client-tools/nbproject/
-/android-tcp-client/tcp-server-client-tools/target/
-android-tcp-client/AndroidJsonCommandTcpClient/.idea
-/android-tcp-client/JsonCommandTcpServer/target/
-/MQTTExample/target/
-online-storage/.idea/
+target 
+.gradle
+build
+nbproject
 online-storage/dbconn.php
-/ThreadExamples/target/
 *.class
 *.iml
-/REST-examples/target/
-REST-examples/.idea/
-/MQTT-examples/Java/target/
 *.lck
-/deprecated/lab04/target/
-deprecated/json-org-lib/.idea/
-deprecated/json-org-lib/target/
-deprecated/TestApps/.idea/
-deprecated/TestApps/target/
-deprecated/tools-lib/.idea/
-deprecated/tools-lib/target/classes/.netbeans_automatic_build
-deprecated/tools-lib/target/
 
-ThreadExamples/.idea/
-MQTT-examples/Java/\.idea/
+venv
 
-PythonThreads/.idea/
+__pycache__
 
-PythonThreads/venv/
-
-PythonSockets/.idea/
-
-LiveCodingPython/.idea/
-
-LiveCodingPython/__pycache__/
-
-SocketVideos2023/.idea/
-
-SocketVideos2023/udp/.idea/
-
-SocketVideos2023/bad-traffic-light/.idea/
 
 .DS_Store
 
-SocketVideos2023/tcp/.idea/
+.idea
