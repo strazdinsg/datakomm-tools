@@ -1,4 +1,4 @@
-package no.ntnu;
+package no.ntnu.communication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
