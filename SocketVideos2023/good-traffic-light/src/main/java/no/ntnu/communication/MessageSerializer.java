@@ -2,9 +2,11 @@ package no.ntnu.communication;
 
 import no.ntnu.TrafficLight;
 import no.ntnu.TrafficLightState;
+import no.ntnu.message.ErrorMessage;
 import no.ntnu.message.GetCommand;
 import no.ntnu.message.Message;
 import no.ntnu.message.SetCommand;
+import no.ntnu.message.StateMessage;
 
 /**
  * Can translate Message objects to Strings and vice versa.
@@ -33,14 +35,26 @@ public class MessageSerializer {
       return null;
     }
 
+    Message message = null;
+
     if (messageString.equals("get")) {
-      return new GetCommand(trafficLight);
+      message = new GetCommand(trafficLight);
     } else if (messageString.startsWith("set ")) {
       String desiredColor = messageString.substring(4);
       TrafficLightState desiredState = TrafficLightState.from(desiredColor);
-      return new SetCommand(trafficLight, desiredState);
+      message = new SetCommand(trafficLight, desiredState);
+    } else if (messageString.startsWith("state ") && messageString.length() > 6) {
+      String stateString = messageString.substring(6);
+      TrafficLightState state = TrafficLightState.from(stateString);
+      if (state != null) {
+        message = new StateMessage(state);
+      }
+    } else if (messageString.startsWith("error ") && messageString.length() > 6) {
+      String error = messageString.substring(6);
+      message = new ErrorMessage(error);
     }
-    return null;
+
+    return message;
   }
 
   /**
@@ -55,6 +69,10 @@ public class MessageSerializer {
       result = "get";
     } else if (message instanceof SetCommand setCommand) {
       result = "set " + setCommand.getDesiredState();
+    } else if (message instanceof ErrorMessage errorMessage) {
+      result = "error " + errorMessage.getError();
+    } else if (message instanceof StateMessage stateMessage) {
+      result = "state " + stateMessage.getState();
     }
     return result;
   }
