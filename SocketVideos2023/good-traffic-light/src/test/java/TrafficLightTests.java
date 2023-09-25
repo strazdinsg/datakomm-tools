@@ -13,6 +13,12 @@ public class TrafficLightTests {
   }
 
   @Test
+  public void testSetNullState() {
+    TrafficLight trafficLight = new TrafficLight();
+    assertThrows(IllegalStateException.class, () -> trafficLight.setState(null));
+  }
+
+  @Test
   public void testProhibitedStateChange() {
     TrafficLight trafficLight = new TrafficLight();
     assertEquals(TrafficLightState.RED, trafficLight.getState());

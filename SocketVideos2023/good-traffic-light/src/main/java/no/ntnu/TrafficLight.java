@@ -23,6 +23,9 @@ public class TrafficLight {
    * @throws IllegalStateException If the traffic light can't switch to the desired state.
    */
   public void setState(TrafficLightState state) throws IllegalStateException {
+    if (state == null) {
+      throw new IllegalStateException("State can't be null");
+    }
     if (this.state.equals(TrafficLightState.RED) && state.equals(TrafficLightState.GREEN)) {
       throw new IllegalStateException("Can't switch from red to green");
     }
