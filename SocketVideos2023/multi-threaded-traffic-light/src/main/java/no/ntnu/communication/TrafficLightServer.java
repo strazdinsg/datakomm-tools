@@ -17,8 +17,6 @@ import no.ntnu.message.Message;
 public class TrafficLightServer {
   private final MessageSerializer serializer;
   ServerSocket serverSocket;
-  private BufferedReader socketReader;
-  private PrintWriter socketWriter;
 
   public TrafficLightServer(TrafficLight trafficLight) {
     this.serializer = new MessageSerializer(trafficLight);
@@ -38,7 +36,8 @@ public class TrafficLightServer {
     while (true) {
       Socket socket = acceptNextClient();
       if (socket != null) {
-        handleClient();
+        ClientHandler clientHandler = new ClientHandler(socket, serializer);
+        clientHandler.start();
       }
     }
   }
@@ -57,45 +56,11 @@ public class TrafficLightServer {
     Socket clientSocket = null;
     try {
       clientSocket = serverSocket.accept();
-      socketReader = new BufferedReader(
-          new InputStreamReader(clientSocket.getInputStream()));
-      socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
       System.out.println("New client connected");
     } catch (IOException e) {
       System.err.println("Could not accept the next client: " + e.getMessage());
     }
     return clientSocket;
-  }
-
-  private void handleClient() {
-    Message clientMessage;
-    do {
-      clientMessage = readClientMessage();
-
-      Message response;
-      if (clientMessage instanceof Command command) {
-        response = command.execute();
-      } else {
-        response = new ErrorMessage("Invalid command received");
-      }
-      sendResponseToClient(response);
-
-    } while (clientMessage != null);
-  }
-
-  private Message readClientMessage() {
-    Message clientMessage = null;
-    try {
-      String rawClientMessage = socketReader.readLine();
-      clientMessage = serializer.fromString(rawClientMessage);
-    } catch (IOException e) {
-      System.err.println("Client disconnected");
-    }
-    return clientMessage;
-  }
-
-  private void sendResponseToClient(Message response) {
-    socketWriter.println(serializer.toString(response));
   }
 }
 

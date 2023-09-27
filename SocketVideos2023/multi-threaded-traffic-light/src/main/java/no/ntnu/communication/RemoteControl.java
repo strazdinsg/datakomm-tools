@@ -39,12 +39,23 @@ public class RemoteControl {
       response = socketReader.readLine();
       System.out.println("Tried to set yellow, got " + response);
 
+      sleepSeconds(20);
+
       socketWriter.println("set green");
       response = socketReader.readLine();
       System.out.println("Tried to set green, got " + response);
 
     } catch (IOException e) {
       System.err.println("Something went wrong: " + e.getMessage());
+    }
+  }
+
+  private static void sleepSeconds(long seconds) {
+    try {
+      Thread.sleep(seconds * 1000);
+    } catch (InterruptedException e) {
+      System.err.println("Thread sleeping interrupted");
+      Thread.currentThread().interrupt();
     }
   }
 }
