@@ -3,6 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>no.ntnu</groupId>
   <artifactId>smart-tv</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Smart TV, Part 1</name>
 </project>
