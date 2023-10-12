@@ -14,7 +14,10 @@ public class SmartTv {
   public static final int PORT_NUMBER = 10025;
   public static final String CHANNEL_COUNT_COMMAND = "c";
   public static final String TURN_ON_COMMAND = "1";
-  public static final String OK_REPONSE = "o";
+  public static final String TURN_OFF_COMMAND = "0";
+  public static final String GET_CHANNEL_COMMAND = "g";
+  public static final String SET_CHANNEL_COMMAND = "s";
+  public static final String OK_RESPONSE = "o";
   boolean isTvOn;
   final int numberOfChannels;
   int currentChannel;
@@ -118,10 +121,24 @@ public class SmartTv {
     String response = null;
 
     if (clientRequest != null) {
-      if (clientRequest.equals(CHANNEL_COUNT_COMMAND)) {
-        response = handleChannelCountCommand();
-      } else if (clientRequest.equals(TURN_ON_COMMAND)) {
-        response = handleTurnOnCommand();
+      switch (clientRequest) {
+        case TURN_ON_COMMAND:
+          response = handleTurnOnCommand();
+          break;
+        case TURN_OFF_COMMAND:
+          response = handleTurnOffCommand();
+          break;
+        case CHANNEL_COUNT_COMMAND:
+          response = handleChannelCountCommand();
+          break;
+        case GET_CHANNEL_COMMAND:
+          response = handleGetChannelCommand();
+          break;
+        default:
+          if (clientRequest.startsWith(SET_CHANNEL_COMMAND)) {
+            String desiredChannel = clientRequest.substring(1);
+            response = handleSetChannelCommand(desiredChannel);
+          }
       }
     }
 
@@ -130,7 +147,12 @@ public class SmartTv {
 
   private String handleTurnOnCommand() {
     isTvOn = true;
-    return OK_REPONSE;
+    return OK_RESPONSE;
+  }
+
+  private String handleTurnOffCommand() {
+    isTvOn = false;
+    return OK_RESPONSE;
   }
 
   private String handleChannelCountCommand() {
@@ -141,6 +163,42 @@ public class SmartTv {
       response = "eMust turn the TV on first";
     }
     return response;
+  }
+
+  private String handleGetChannelCommand() {
+    String response;
+    if (isTvOn) {
+      response = "C" + currentChannel;
+    } else {
+      response = "eMust turn the TV on first";
+    }
+    return response;
+  }
+
+  private String handleSetChannelCommand(String desiredChannelString) {
+    String response;
+    Integer desiredChannel = parseInteger(desiredChannelString);
+    if (desiredChannel != null && desiredChannel > 0 && desiredChannel <= numberOfChannels) {
+      if (isTvOn) {
+        currentChannel = desiredChannel;
+        response = OK_RESPONSE;
+      } else {
+        response = "eMust turn the TV on first";
+      }
+    } else {
+      response = "eInvalid channel number";
+    }
+    return response;
+  }
+
+  private Integer parseInteger(String s) {
+    Integer number = null;
+    try {
+      number = Integer.parseInt(s);
+    } catch (NumberFormatException e) {
+      System.out.println("Can't parse string as int: " + s);
+    }
+    return number;
   }
 
   /**

@@ -29,9 +29,24 @@ public class RemoteControl {
           new InputStreamReader(socket.getInputStream()));
 
       sendCommandToServer("c");
+      sendCommandToServer("g");
       sendCommandToServer("1");
       sendCommandToServer("c");
+      sendCommandToServer("g");
       sendCommandToServer("s13");
+      sendCommandToServer("sDdd");
+      sendCommandToServer("s15");
+      sendCommandToServer("s0");
+      sendCommandToServer("s-2");
+      sendCommandToServer("g");
+      sendCommandToServer("s4");
+      sendCommandToServer("g");
+      sendCommandToServer("0");
+      sendCommandToServer("g");
+      sendCommandToServer("s12");
+      sendCommandToServer("1");
+      sendCommandToServer("g");
+      sendCommandToServer("0");
 
     } catch (IOException e) {
       System.err.println("Could not establish connection to the server: " + e.getMessage());
@@ -39,8 +54,9 @@ public class RemoteControl {
   }
 
   private void sendCommandToServer(String command) throws IOException {
+    System.out.println("Sending command: " + command);
     socketWriter.println(command);
     String serverResponse = socketReader.readLine();
-    System.out.println("Server's response: " + serverResponse);
+    System.out.println("  >>> " + serverResponse);
   }
 }
