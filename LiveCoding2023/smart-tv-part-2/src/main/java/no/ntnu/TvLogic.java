@@ -27,14 +27,14 @@ public class TvLogic {
    * Turn ON the TV.
    */
   public void turnOn() {
-    // TODO
+    isTvOn = true;
   }
 
   /**
    * Turn OFF the TV.
    */
   public void turnOff() {
-    // TODO
+    isTvOn = false;
   }
 
   /**
@@ -50,8 +50,12 @@ public class TvLogic {
    * Get the number of channels this TV has.
    *
    * @return The total number of channels
+   * @throws IllegalStateException When the TV is OFF
    */
-  public int getNumberOfChannels() {
+  public int getNumberOfChannels() throws IllegalStateException {
+    if (!isTvOn) {
+      throw new IllegalStateException("Must turn on the TV first");
+    }
     return numberOfChannels;
   }
 
@@ -59,8 +63,12 @@ public class TvLogic {
    * Get the current channel of the TV.
    *
    * @return The current channel
+   * @throws IllegalStateException When the TV is OFF
    */
-  public int getCurrentChannel() {
+  public int getCurrentChannel() throws IllegalStateException {
+    if (!isTvOn) {
+      throw new IllegalStateException("Must turn on the TV first");
+    }
     return currentChannel;
   }
 
@@ -69,8 +77,15 @@ public class TvLogic {
    *
    * @param channel The desired channel
    * @throws IllegalArgumentException When the channel number is invalid
+   * @throws IllegalStateException When the TV is OFF
    */
-  public void setChannel(int channel) throws IllegalArgumentException {
-    // TODO Implement this
+  public void setChannel(int channel) throws IllegalArgumentException, IllegalStateException {
+    if (!isTvOn) {
+      throw new IllegalStateException("Must turn on the TV first");
+    }
+    if (channel <= 0 || channel > numberOfChannels) {
+      throw new IllegalArgumentException("Invalid channel number");
+    }
+    currentChannel = channel;
   }
 }
