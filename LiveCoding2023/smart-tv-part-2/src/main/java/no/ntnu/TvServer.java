@@ -18,6 +18,9 @@ public class TvServer {
   public static final String GET_CHANNEL_COMMAND = "g";
   public static final String SET_CHANNEL_COMMAND = "s";
   public static final String OK_RESPONSE = "o";
+  private static final String CHANNEL_COUNT_MESSAGE = "c";
+  private static final String ERROR_MESSAGE = "e";
+  private static final String CURRENT_CHANNEL_MESSAGE = "C";
   private final TvLogic logic;
 
   boolean isTcpServerRunning;
@@ -74,7 +77,11 @@ public class TvServer {
     do {
       String clientRequest = readClientRequest();
       System.out.println("Received from client: " + clientRequest);
-      response = handleClientRequest(clientRequest);
+      try {
+        response = handleClientRequest(clientRequest);
+      } catch (Exception e) {
+        response = ERROR_MESSAGE + e.getMessage();
+      }
       if (response != null) {
         sendResponseToClient(response);
       }
@@ -136,39 +143,21 @@ public class TvServer {
   }
 
   private String handleChannelCountCommand() {
-    String response;
-    // TODO - refactor
-    if (logic.isTvOn()) {
-      response = "c" + logic.getNumberOfChannels();
-    } else {
-      response = "eMust turn the TV on first";
-    }
-    return response;
+    return CHANNEL_COUNT_MESSAGE + logic.getNumberOfChannels();
   }
 
   private String handleGetChannelCommand() {
-    String response;
-    if (logic.isTvOn()) {
-      response = "C" + logic.getCurrentChannel();
-    } else {
-      response = "eMust turn the TV on first";
-    }
-    return response;
+    return CURRENT_CHANNEL_MESSAGE + logic.getCurrentChannel();
   }
 
   private String handleSetChannelCommand(String desiredChannelString) {
     String response;
     Integer desiredChannel = parseInteger(desiredChannelString);
-    if (desiredChannel != null && desiredChannel > 0
-        && desiredChannel <= logic.getNumberOfChannels()) {
-      if (logic.isTvOn()) {
-        logic.setChannel(desiredChannel);
-        response = OK_RESPONSE;
-      } else {
-        response = "eMust turn the TV on first";
-      }
+    if (desiredChannel != null) {
+      logic.setChannel(desiredChannel);
+      response = OK_RESPONSE;
     } else {
-      response = "eInvalid channel number";
+      response = ERROR_MESSAGE + "Invalid channel number";
     }
     return response;
   }
