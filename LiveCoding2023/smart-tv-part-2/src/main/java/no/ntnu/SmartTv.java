@@ -1,33 +1,17 @@
 package no.ntnu;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 /**
- * Smart TV - the logic.
+ * Run the whole Smart TV, including the TCP socket communication.
  */
 public class SmartTv {
-  boolean isTvOn;
-  final int numberOfChannels;
-  int currentChannel;
-
   /**
-   * Create a new Smart TV.
+   * Run the Smart TV, including the server.
    *
-   * @param numberOfChannels The total number of channels the TV has
+   * @param args Command line arguments, not used
    */
-  public SmartTv(int numberOfChannels) {
-    if (numberOfChannels < 1) {
-      throw new IllegalArgumentException("Number of channels must be a positive number");
-    }
-
-    this.numberOfChannels = numberOfChannels;
-    isTvOn = false;
-    currentChannel = 1;
+  public static void main(String[] args) {
+    TvLogic logic = new TvLogic(13);
+    TvServer server = new TvServer(logic);
+    server.startServer();
   }
-
 }

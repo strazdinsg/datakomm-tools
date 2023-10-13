@@ -1,6 +1,7 @@
 package no.ntnu;
 
-import static no.ntnu.SmartTv.PORT_NUMBER;
+
+import static no.ntnu.TvServer.PORT_NUMBER;
 
 import java.io.BufferedReader;
 import java.io.IOException;

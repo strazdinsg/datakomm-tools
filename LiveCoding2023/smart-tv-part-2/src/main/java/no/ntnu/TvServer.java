@@ -18,15 +18,20 @@ public class TvServer {
   public static final String GET_CHANNEL_COMMAND = "g";
   public static final String SET_CHANNEL_COMMAND = "s";
   public static final String OK_RESPONSE = "o";
+  private final TvLogic logic;
 
   boolean isTcpServerRunning;
   private BufferedReader socketReader;
   private PrintWriter socketWriter;
 
+  public TvServer(TvLogic logic) {
+    this.logic = logic;
+  }
+
   /**
    * Start TCP server for this TV.
    */
-  private void startServer() {
+  public void startServer() {
     ServerSocket listeningSocket = openListeningSocket();
     System.out.println("Server listening on port " + PORT_NUMBER);
     if (listeningSocket != null) {
@@ -121,19 +126,20 @@ public class TvServer {
   }
 
   private String handleTurnOnCommand() {
-    isTvOn = true;
+    logic.turnOn();
     return OK_RESPONSE;
   }
 
   private String handleTurnOffCommand() {
-    isTvOn = false;
+    logic.turnOff();
     return OK_RESPONSE;
   }
 
   private String handleChannelCountCommand() {
     String response;
-    if (isTvOn) {
-      response = "c" + numberOfChannels;
+    // TODO - refactor
+    if (logic.isTvOn()) {
+      response = "c" + logic.getNumberOfChannels();
     } else {
       response = "eMust turn the TV on first";
     }
@@ -142,8 +148,8 @@ public class TvServer {
 
   private String handleGetChannelCommand() {
     String response;
-    if (isTvOn) {
-      response = "C" + currentChannel;
+    if (logic.isTvOn()) {
+      response = "C" + logic.getCurrentChannel();
     } else {
       response = "eMust turn the TV on first";
     }
@@ -153,9 +159,10 @@ public class TvServer {
   private String handleSetChannelCommand(String desiredChannelString) {
     String response;
     Integer desiredChannel = parseInteger(desiredChannelString);
-    if (desiredChannel != null && desiredChannel > 0 && desiredChannel <= numberOfChannels) {
-      if (isTvOn) {
-        currentChannel = desiredChannel;
+    if (desiredChannel != null && desiredChannel > 0
+        && desiredChannel <= logic.getNumberOfChannels()) {
+      if (logic.isTvOn()) {
+        logic.setChannel(desiredChannel);
         response = OK_RESPONSE;
       } else {
         response = "eMust turn the TV on first";
