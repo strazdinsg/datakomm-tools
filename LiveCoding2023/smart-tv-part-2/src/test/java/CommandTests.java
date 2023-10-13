@@ -1,7 +1,7 @@
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-import no.ntnu.ErrorMessage;
+import no.ntnu.message.ErrorMessage;
 import no.ntnu.TvLogic;
 import no.ntnu.message.ChannelCountCommand;
 import no.ntnu.message.ChannelCountMessage;

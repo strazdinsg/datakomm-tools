@@ -1,6 +1,5 @@
 package no.ntnu.message;
 
-import no.ntnu.ErrorMessage;
 import no.ntnu.TvLogic;
 
 /**
