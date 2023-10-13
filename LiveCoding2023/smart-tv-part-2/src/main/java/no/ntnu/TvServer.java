@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import no.ntnu.message.Command;
+import no.ntnu.message.Message;
+import no.ntnu.message.MessageSerializer;
 
 /**
  * Handles the TCP server socket(s).
@@ -73,15 +76,11 @@ public class TvServer {
   }
 
   private void handleClient(Socket clientSocket) {
-    String response;
+    Message response;
     do {
-      String clientRequest = readClientRequest();
-      System.out.println("Received from client: " + clientRequest);
-      try {
-        response = handleClientRequest(clientRequest);
-      } catch (Exception e) {
-        response = ERROR_MESSAGE + e.getMessage();
-      }
+      Command clientCommand = readClientRequest();
+      System.out.println("Received from client: " + clientCommand);
+      response = clientCommand.execute(logic);
       if (response != null) {
         sendResponseToClient(response);
       }
@@ -93,83 +92,19 @@ public class TvServer {
    *
    * @return The received client message, or null on error
    */
-  private String readClientRequest() {
-    String clientRequest = null;
+  private Command readClientRequest() {
+    Message clientCommand = null;
     try {
-      clientRequest = socketReader.readLine();
+      String rawClientRequest = socketReader.readLine();
+      clientCommand = MessageSerializer.fromString(rawClientRequest);
+      if (!(clientCommand instanceof Command)) {
+        System.err.println("Wrong message from the client: " + clientCommand);
+        clientCommand = null;
+      }
     } catch (IOException e) {
       System.err.println("Could not receive client request: " + e.getMessage());
     }
-    return clientRequest;
-  }
-
-
-  private String handleClientRequest(String clientRequest) {
-    String response = null;
-
-    if (clientRequest != null) {
-      switch (clientRequest) {
-        case TURN_ON_COMMAND:
-          response = handleTurnOnCommand();
-          break;
-        case TURN_OFF_COMMAND:
-          response = handleTurnOffCommand();
-          break;
-        case CHANNEL_COUNT_COMMAND:
-          response = handleChannelCountCommand();
-          break;
-        case GET_CHANNEL_COMMAND:
-          response = handleGetChannelCommand();
-          break;
-        default:
-          if (clientRequest.startsWith(SET_CHANNEL_COMMAND)) {
-            String desiredChannel = clientRequest.substring(1);
-            response = handleSetChannelCommand(desiredChannel);
-          }
-      }
-    }
-
-    return response;
-  }
-
-  private String handleTurnOnCommand() {
-    logic.turnOn();
-    return OK_RESPONSE;
-  }
-
-  private String handleTurnOffCommand() {
-    logic.turnOff();
-    return OK_RESPONSE;
-  }
-
-  private String handleChannelCountCommand() {
-    return CHANNEL_COUNT_MESSAGE + logic.getNumberOfChannels();
-  }
-
-  private String handleGetChannelCommand() {
-    return CURRENT_CHANNEL_MESSAGE + logic.getCurrentChannel();
-  }
-
-  private String handleSetChannelCommand(String desiredChannelString) {
-    String response;
-    Integer desiredChannel = parseInteger(desiredChannelString);
-    if (desiredChannel != null) {
-      logic.setChannel(desiredChannel);
-      response = OK_RESPONSE;
-    } else {
-      response = ERROR_MESSAGE + "Invalid channel number";
-    }
-    return response;
-  }
-
-  private Integer parseInteger(String s) {
-    Integer number = null;
-    try {
-      number = Integer.parseInt(s);
-    } catch (NumberFormatException e) {
-      System.out.println("Can't parse string as int: " + s);
-    }
-    return number;
+    return (Command) clientCommand;
   }
 
   /**
@@ -177,8 +112,8 @@ public class TvServer {
    *
    * @param response The response to send to the client, NOT including the newline
    */
-  private void sendResponseToClient(String response) {
-    socketWriter.println(response);
+  private void sendResponseToClient(Message response) {
+    socketWriter.println(MessageSerializer.toString(response));
   }
 
 }
