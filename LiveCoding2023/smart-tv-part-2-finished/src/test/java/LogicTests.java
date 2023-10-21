@@ -6,6 +6,9 @@ import static org.junit.Assert.assertThrows;
 import no.ntnu.TvLogic;
 import org.junit.Test;
 
+/**
+ * Tests for the TV logic.
+ */
 public class LogicTests {
   private static final int CHANNEL_COUNT = 10;
 
