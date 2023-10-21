@@ -67,15 +67,17 @@ public class TvServer {
   }
 
   private void handleClient(Socket clientSocket) {
-    Message response = null;
+    Message response;
     do {
       Command clientCommand = readClientRequest();
-      System.out.println("Received from client: " + clientCommand);
       if (clientCommand != null) {
+        System.out.println("Received a " + clientCommand.getClass().getSimpleName());
         response = clientCommand.execute(logic);
-      }
-      if (response != null) {
-        sendResponseToClient(response);
+        if (response != null) {
+          sendResponseToClient(response);
+        }
+      } else {
+        response = null;
       }
     } while (response != null);
   }
