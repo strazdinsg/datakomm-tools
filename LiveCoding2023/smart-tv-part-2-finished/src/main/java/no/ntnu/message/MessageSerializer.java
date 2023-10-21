@@ -10,7 +10,7 @@ public class MessageSerializer {
   public static final String GET_CHANNEL_COMMAND = "g";
   public static final String SET_CHANNEL_COMMAND = "s";
   public static final String OK_RESPONSE = "o";
-  public static final String CHANNEL_COUNT_MESSAGE = "c";
+  public static final String CHANNEL_COUNT_MESSAGE = "C";
   public static final String ERROR_MESSAGE = "e";
   public static final String CURRENT_CHANNEL_MESSAGE = "C";
 
