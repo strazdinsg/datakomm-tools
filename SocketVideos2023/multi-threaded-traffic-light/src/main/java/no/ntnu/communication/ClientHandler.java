@@ -1,13 +1,13 @@
 package no.ntnu.communication;
 
-import no.ntnu.message.Command;
-import no.ntnu.message.ErrorMessage;
-import no.ntnu.message.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import no.ntnu.message.Command;
+import no.ntnu.message.ErrorMessage;
+import no.ntnu.message.Message;
 
 /**
  * Handles one client connection - all the communication with that client.

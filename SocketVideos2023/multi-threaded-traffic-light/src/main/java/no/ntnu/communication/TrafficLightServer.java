@@ -1,15 +1,9 @@
 package no.ntnu.communication;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import no.ntnu.TrafficLight;
-import no.ntnu.message.Command;
-import no.ntnu.message.ErrorMessage;
-import no.ntnu.message.Message;
 
 /**
  * TCP server for the traffic light.
