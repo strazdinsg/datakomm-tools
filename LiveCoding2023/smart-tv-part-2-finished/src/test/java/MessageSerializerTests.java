@@ -158,6 +158,19 @@ public class MessageSerializerTests {
   }
 
   @Test
+  public void testSetChannelCommandToString() {
+    assertSetChannelToString(1);
+    assertSetChannelToString(3);
+    assertSetChannelToString(12);
+    assertSetChannelToString(667);
+  }
+
+  private void assertSetChannelToString(int channel) {
+    assertEquals(SET_CHANNEL_COMMAND + channel,
+        MessageSerializer.toString(new SetChannelCommand(channel)));
+  }
+
+  @Test
   public void testCurrentChannelCommandToString() {
     assertEquals(GET_CHANNEL_COMMAND, MessageSerializer.toString(new GetChannelCommand()));
   }

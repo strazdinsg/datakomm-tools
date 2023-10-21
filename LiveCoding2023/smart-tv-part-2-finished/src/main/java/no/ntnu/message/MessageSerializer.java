@@ -107,6 +107,8 @@ public class MessageSerializer {
       s = ERROR_MESSAGE + errorMessage.getMessage();
     } else if (m instanceof OkMessage) {
       s = OK_RESPONSE;
+    } else if (m instanceof SetChannelCommand setChannelCommand) {
+      s = SET_CHANNEL_COMMAND + setChannelCommand.getChannel();
     }
     return s;
   }
