@@ -15,15 +15,6 @@ import no.ntnu.message.MessageSerializer;
  */
 public class TvServer {
   public static final int PORT_NUMBER = 10025;
-  public static final String CHANNEL_COUNT_COMMAND = "c";
-  public static final String TURN_ON_COMMAND = "1";
-  public static final String TURN_OFF_COMMAND = "0";
-  public static final String GET_CHANNEL_COMMAND = "g";
-  public static final String SET_CHANNEL_COMMAND = "s";
-  public static final String OK_RESPONSE = "o";
-  private static final String CHANNEL_COUNT_MESSAGE = "c";
-  private static final String ERROR_MESSAGE = "e";
-  private static final String CURRENT_CHANNEL_MESSAGE = "C";
   private final TvLogic logic;
 
   boolean isTcpServerRunning;
@@ -76,11 +67,13 @@ public class TvServer {
   }
 
   private void handleClient(Socket clientSocket) {
-    Message response;
+    Message response = null;
     do {
       Command clientCommand = readClientRequest();
       System.out.println("Received from client: " + clientCommand);
-      response = clientCommand.execute(logic);
+      if (clientCommand != null) {
+        response = clientCommand.execute(logic);
+      }
       if (response != null) {
         sendResponseToClient(response);
       }

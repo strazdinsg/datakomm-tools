@@ -5,7 +5,7 @@ import no.ntnu.TvLogic;
 /**
  * A command sent from the client to the server (from remote to TV).
  */
-public abstract class Command extends Message {
+public abstract class Command implements Message {
   /**
    * Execute the command.
    *

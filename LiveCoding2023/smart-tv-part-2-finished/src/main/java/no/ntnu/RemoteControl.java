@@ -13,7 +13,6 @@ import java.net.Socket;
  * Remote control for a TV - a TCP client.
  */
 public class RemoteControl {
-  private Socket socket;
   private BufferedReader socketReader;
   private PrintWriter socketWriter;
 
@@ -24,7 +23,7 @@ public class RemoteControl {
 
   private void run() {
     try {
-      socket = new Socket("localhost", PORT_NUMBER);
+      Socket socket = new Socket("localhost", PORT_NUMBER);
       socketWriter = new PrintWriter(socket.getOutputStream(), true);
       socketReader = new BufferedReader(
           new InputStreamReader(socket.getInputStream()));

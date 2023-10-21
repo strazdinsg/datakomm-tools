@@ -4,6 +4,7 @@ package no.ntnu;
  * Smart TV - the logic.
  */
 public class TvLogic {
+  private static final String ERR_MUST_TURN_ON = "Must turn on the TV first";
   private boolean isTvOn;
   private final int numberOfChannels;
   private int currentChannel;
@@ -54,7 +55,7 @@ public class TvLogic {
    */
   public int getNumberOfChannels() throws IllegalStateException {
     if (!isTvOn) {
-      throw new IllegalStateException("Must turn on the TV first");
+      throw new IllegalStateException(ERR_MUST_TURN_ON);
     }
     return numberOfChannels;
   }
@@ -67,7 +68,7 @@ public class TvLogic {
    */
   public int getCurrentChannel() throws IllegalStateException {
     if (!isTvOn) {
-      throw new IllegalStateException("Must turn on the TV first");
+      throw new IllegalStateException(ERR_MUST_TURN_ON);
     }
     return currentChannel;
   }
@@ -81,7 +82,7 @@ public class TvLogic {
    */
   public void setChannel(int channel) throws IllegalArgumentException, IllegalStateException {
     if (!isTvOn) {
-      throw new IllegalStateException("Must turn on the TV first");
+      throw new IllegalStateException(ERR_MUST_TURN_ON);
     }
     if (channel <= 0 || channel > numberOfChannels) {
       throw new IllegalArgumentException("Invalid channel number");
