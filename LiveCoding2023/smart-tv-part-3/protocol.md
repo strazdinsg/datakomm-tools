@@ -17,7 +17,7 @@ The following requests could be sent from client to server:
 Server can respond with:
 
 * "o"  - performed the necessary operation
-* "c###"  - report the number of channels, where ### is the number of channels, as a string, 
+* "N###"  - report the number of channels, where ### is the number of channels, as a string, 
   can be several bytes, until the newline
 * "C###"  - report the current channel, where ### is an integer represented as a  string,
   can be several bytes, until the newline

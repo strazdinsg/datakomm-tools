@@ -158,6 +158,14 @@ public class MessageSerializerTests {
   }
 
   @Test
+  public void testStringToChannelCountMessage() {
+    Message m = MessageSerializer.fromString(CHANNEL_COUNT_MESSAGE + 12);
+    assertTrue(m instanceof ChannelCountMessage);
+    ChannelCountMessage ccm = (ChannelCountMessage) m;
+    assertEquals(12, ccm.getChannelCount());
+  }
+
+  @Test
   public void testSetChannelCommandToString() {
     assertSetChannelToString(1);
     assertSetChannelToString(3);
