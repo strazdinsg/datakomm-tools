@@ -13,9 +13,12 @@ public class RemoteRunner {
    */
   public static void main(String[] args) {
     TcpClient tcpClient = new TcpClient();
-    tcpClient.start();
-    GuiApp.startApp(tcpClient);
-    // This code is reached when the GUI is stopped
-    tcpClient.stop();
+    if (tcpClient.start()) {
+      GuiApp.startApp(tcpClient);
+      // This code is reached when the GUI is stopped
+      tcpClient.stop();
+    } else {
+      System.err.println("Could not connect to a smart TV!");
+    }
   }
 }
