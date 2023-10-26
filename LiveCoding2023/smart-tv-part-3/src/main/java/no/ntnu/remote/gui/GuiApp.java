@@ -17,6 +17,7 @@ import no.ntnu.message.CurrentChannelMessage;
 import no.ntnu.message.GetChannelCommand;
 import no.ntnu.message.Message;
 import no.ntnu.message.OkMessage;
+import no.ntnu.message.SetChannelCommand;
 import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;
 import no.ntnu.remote.TcpClient;
@@ -34,6 +35,7 @@ public class GuiApp extends Application {
   private Button powerButton;
   private Label currentChannelLabel;
   private Label channelCountLabel;
+  int currentChannel = -1;
 
   public static void startApp(TcpClient tcpClient) {
     GuiApp.tcpClient = tcpClient;
@@ -87,7 +89,8 @@ public class GuiApp extends Application {
   private void queryCurrentChannel() {
     Message response = tcpClient.sendCommand(new GetChannelCommand());
     if (response instanceof CurrentChannelMessage currentChannelMessage) {
-      updateCurrentChannel(currentChannelMessage.getChannel());
+      currentChannel = currentChannelMessage.getChannel();
+      updateCurrentChannel();
     }
   }
 
@@ -96,11 +99,10 @@ public class GuiApp extends Application {
     if (response instanceof ChannelCountMessage channelCountMessage) {
       updateChannelCount(channelCountMessage.getChannelCount());
     }
-
   }
 
-  private void updateCurrentChannel(int channel) {
-    currentChannelLabel.setText("" + channel);
+  private void updateCurrentChannel() {
+    currentChannelLabel.setText("" + currentChannel);
   }
 
   private void updateChannelCount(int channelCount) {
@@ -125,11 +127,22 @@ public class GuiApp extends Application {
   }
 
   private Node createChannelButtonPanel() {
-    Button plusButton = new Button("+");
-    Button minusButton = new Button("-");
-    HBox channelButtonPanel = new HBox(minusButton, plusButton);
+    Button channelPlusButton = new Button("+");
+    Button channelMinusButton = new Button("-");
+    channelPlusButton.setOnMouseClicked(mouseEvent -> updateChannel(1));
+    channelMinusButton.setOnMouseClicked(mouseEvent -> updateChannel(-1));
+    HBox channelButtonPanel = new HBox(channelMinusButton, channelPlusButton);
     channelButtonPanel.setPadding(new Insets(0, 0, 0, 10));
     channelButtonPanel.setSpacing(5);
     return channelButtonPanel;
+  }
+
+  private void updateChannel(int channelIncrease) {
+    int desiredChannel = currentChannel + channelIncrease;
+    Message response = tcpClient.sendCommand(new SetChannelCommand(desiredChannel));
+    if (response instanceof OkMessage) {
+      currentChannel = desiredChannel;
+      updateCurrentChannel();
+    }
   }
 }

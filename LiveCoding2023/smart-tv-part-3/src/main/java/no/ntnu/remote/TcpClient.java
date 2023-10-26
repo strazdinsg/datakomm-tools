@@ -66,7 +66,7 @@ public class TcpClient {
         String rawResponse = socketReader.readLine();
         response = MessageSerializer.fromString(rawResponse);
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        System.err.println("Could not send a command: " + e.getMessage());
       }
     }
     return response;
