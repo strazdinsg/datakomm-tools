@@ -10,7 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import no.ntnu.message.ChannelCountCommand;
+import no.ntnu.message.ChannelCountMessage;
 import no.ntnu.message.Command;
+import no.ntnu.message.CurrentChannelMessage;
+import no.ntnu.message.GetChannelCommand;
 import no.ntnu.message.Message;
 import no.ntnu.message.OkMessage;
 import no.ntnu.message.TurnOffCommand;
@@ -28,6 +32,8 @@ public class GuiApp extends Application {
 
   private Parent channelPanel;
   private Button powerButton;
+  private Label currentChannelLabel;
+  private Label channelCountLabel;
 
   public static void startApp(TcpClient tcpClient) {
     GuiApp.tcpClient = tcpClient;
@@ -60,8 +66,12 @@ public class GuiApp extends Application {
     Message reply = tcpClient.sendCommand(command);
     if (reply instanceof OkMessage) {
       setTvState(!isTvOn);
+      updatePowerButtonText();
+      if (isTvOn) {
+        queryChannelCount();
+        queryCurrentChannel();
+      }
     }
-    updatePowerButtonText();
   }
 
   private void setTvState(boolean newState) {
@@ -74,6 +84,29 @@ public class GuiApp extends Application {
     powerButton.setText(text);
   }
 
+  private void queryCurrentChannel() {
+    Message response = tcpClient.sendCommand(new GetChannelCommand());
+    if (response instanceof CurrentChannelMessage currentChannelMessage) {
+      updateCurrentChannel(currentChannelMessage.getChannel());
+    }
+  }
+
+  private void queryChannelCount() {
+    Message response = tcpClient.sendCommand(new ChannelCountCommand());
+    if (response instanceof ChannelCountMessage channelCountMessage) {
+      updateChannelCount(channelCountMessage.getChannelCount());
+    }
+
+  }
+
+  private void updateCurrentChannel(int channel) {
+    currentChannelLabel.setText("" + channel);
+  }
+
+  private void updateChannelCount(int channelCount) {
+    channelCountLabel.setText("" + channelCount);
+  }
+
   private Parent createChannelPanel() {
     channelPanel = new HBox(createChannelIndicatorPanel(),
         createChannelButtonPanel());
@@ -82,9 +115,9 @@ public class GuiApp extends Application {
   }
 
   private Node createChannelIndicatorPanel() {
-    Label channelLabel = new Label("1");
-    Label channelCountLabel = new Label("-");
-    HBox channelIndicatorPanel = new HBox(new Label("Channel: "), channelLabel,
+    currentChannelLabel = new Label("1");
+    channelCountLabel = new Label("-");
+    HBox channelIndicatorPanel = new HBox(new Label("Channel: "), currentChannelLabel,
         new Label("/"), channelCountLabel);
     channelIndicatorPanel.setSpacing(5);
     channelIndicatorPanel.setPadding(new Insets(5, 0, 0, 10));
