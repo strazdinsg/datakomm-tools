@@ -80,6 +80,7 @@ public class TvServer {
         response = null;
       }
     } while (response != null);
+    System.out.println("Client " + clientSocket.getRemoteSocketAddress() + " leaving");
   }
 
   /**
@@ -93,7 +94,9 @@ public class TvServer {
       String rawClientRequest = socketReader.readLine();
       clientCommand = MessageSerializer.fromString(rawClientRequest);
       if (!(clientCommand instanceof Command)) {
-        System.err.println("Wrong message from the client: " + clientCommand);
+        if (clientCommand != null) {
+          System.err.println("Wrong message from the client: " + clientCommand);
+        }
         clientCommand = null;
       }
     } catch (IOException e) {
