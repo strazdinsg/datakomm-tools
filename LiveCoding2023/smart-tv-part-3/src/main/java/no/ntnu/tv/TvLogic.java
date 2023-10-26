@@ -1,4 +1,4 @@
-package no.ntnu;
+package no.ntnu.tv;
 
 /**
  * Smart TV - the logic.

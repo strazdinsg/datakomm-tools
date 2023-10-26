@@ -1,7 +1,7 @@
-package no.ntnu;
+package no.ntnu.remote;
 
 
-import static no.ntnu.TvServer.PORT_NUMBER;
+import static no.ntnu.tv.TvServer.PORT_NUMBER;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,15 +20,15 @@ import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;
 
 /**
- * Remote control for a TV - a TCP client.
+ * A dummy "remote control" which simply sends a predefined list of commands to the server.
  */
-public class RemoteControl {
+public class DummyRemoteControl {
   private BufferedReader socketReader;
   private PrintWriter socketWriter;
   private Socket socket;
 
   public static void main(String[] args) {
-    RemoteControl remoteControl = new RemoteControl();
+    DummyRemoteControl remoteControl = new DummyRemoteControl();
     remoteControl.run();
   }
 

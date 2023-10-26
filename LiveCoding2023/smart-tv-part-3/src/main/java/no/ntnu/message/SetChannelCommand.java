@@ -1,6 +1,6 @@
 package no.ntnu.message;
 
-import no.ntnu.TvLogic;
+import no.ntnu.tv.TvLogic;
 
 /**
  * A message requesting that the channel is switched on a TV.

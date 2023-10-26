@@ -1,6 +1,6 @@
 package no.ntnu.message;
 
-import no.ntnu.TvLogic;
+import no.ntnu.tv.TvLogic;
 
 /**
  * A command asking for the number of the channels.

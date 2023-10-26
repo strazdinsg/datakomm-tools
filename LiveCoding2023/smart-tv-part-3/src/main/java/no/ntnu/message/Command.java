@@ -1,6 +1,6 @@
 package no.ntnu.message;
 
-import no.ntnu.TvLogic;
+import no.ntnu.tv.TvLogic;
 
 /**
  * A command sent from the client to the server (from remote to TV).

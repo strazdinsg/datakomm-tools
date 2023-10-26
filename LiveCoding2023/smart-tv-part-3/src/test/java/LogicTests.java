@@ -3,7 +3,7 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertThrows;
 
-import no.ntnu.TvLogic;
+import no.ntnu.tv.TvLogic;
 import org.junit.Test;
 
 /**

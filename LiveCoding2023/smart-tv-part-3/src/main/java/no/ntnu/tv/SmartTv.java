@@ -1,4 +1,4 @@
-package no.ntnu;
+package no.ntnu.tv;
 
 /**
  * Run the whole Smart TV, including the TCP socket communication.
