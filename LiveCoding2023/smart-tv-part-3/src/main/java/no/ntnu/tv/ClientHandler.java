@@ -6,27 +6,29 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import no.ntnu.message.Command;
+import no.ntnu.message.CurrentChannelMessage;
 import no.ntnu.message.Message;
 import no.ntnu.message.MessageSerializer;
+import no.ntnu.message.TvStateMessage;
 
 /**
  * Handler for one specific client connection (TCP).
  */
 public class ClientHandler extends Thread {
-  private final TvLogic logic;
   private final Socket socket;
   private final BufferedReader socketReader;
   private final PrintWriter socketWriter;
+  private final TvServer server;
 
   /**
    * Create a new client handler.
    *
    * @param socket Socket associated with this client
-   * @param logic  The TV logic which will process the commands
+   * @param server Reference to the main TCP server class
    * @throws IOException When something goes wrong with establishing the input or output streams
    */
-  public ClientHandler(Socket socket, TvLogic logic) throws IOException {
-    this.logic = logic;
+  public ClientHandler(Socket socket, TvServer server) throws IOException {
+    this.server = server;
     this.socket = socket;
     socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     socketWriter = new PrintWriter(socket.getOutputStream(), true);
@@ -42,15 +44,25 @@ public class ClientHandler extends Thread {
       Command clientCommand = readClientRequest();
       if (clientCommand != null) {
         System.out.println("Received a " + clientCommand.getClass().getSimpleName());
-        response = clientCommand.execute(logic);
+        response = clientCommand.execute(server.getTvLogic());
         if (response != null) {
-          sendResponseToClient(response);
+          if (isBroadcastMessage(response)) {
+            server.sendResponseToAllClients(response);
+          } else {
+            sendToClient(response);
+          }
         }
       } else {
         response = null;
       }
     } while (response != null);
     System.out.println("Client " + socket.getRemoteSocketAddress() + " leaving");
+    server.clientDisconnected(this);
+  }
+
+  private boolean isBroadcastMessage(Message response) {
+    return response instanceof TvStateMessage
+        || response instanceof CurrentChannelMessage;
   }
 
   /**
@@ -78,10 +90,10 @@ public class ClientHandler extends Thread {
   /**
    * Send a response from the server to the client, over the TCP socket.
    *
-   * @param response The response to send to the client, NOT including the newline
+   * @param message The message to send to the client
    */
-  private void sendResponseToClient(Message response) {
-    socketWriter.println(MessageSerializer.toString(response));
+  public void sendToClient(Message message) {
+    socketWriter.println(MessageSerializer.toString(message));
   }
 
 }
