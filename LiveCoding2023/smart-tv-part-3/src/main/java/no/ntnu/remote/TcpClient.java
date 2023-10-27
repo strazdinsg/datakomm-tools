@@ -45,9 +45,13 @@ public class TcpClient {
       Message message = null;
       do {
         try {
-          String rawMessage = socketReader.readLine();
-          message = MessageSerializer.fromString(rawMessage);
-          handleIncomingMessage(message, listener);
+          if (socketReader != null) {
+            String rawMessage = socketReader.readLine();
+            message = MessageSerializer.fromString(rawMessage);
+            handleIncomingMessage(message, listener);
+          } else {
+            message = null;
+          }
         } catch (IOException e) {
           System.err.println("Error while receiving incoming message: " + e.getMessage());
         }
