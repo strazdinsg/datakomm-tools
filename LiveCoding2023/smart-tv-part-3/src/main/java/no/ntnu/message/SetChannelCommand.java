@@ -21,7 +21,7 @@ public class SetChannelCommand extends Command {
   public Message execute(TvLogic logic) {
     try {
       logic.setChannel(channel);
-      return new OkMessage();
+      return new CurrentChannelMessage(channel);
     } catch (Exception e) {
       return new ErrorMessage(e.getMessage());
     }

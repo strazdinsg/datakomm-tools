@@ -1,13 +1,13 @@
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
+import no.ntnu.message.CurrentChannelMessage;
 import no.ntnu.message.TvStateMessage;
 import no.ntnu.tv.TvLogic;
 import no.ntnu.message.ChannelCountCommand;
 import no.ntnu.message.ChannelCountMessage;
 import no.ntnu.message.ErrorMessage;
 import no.ntnu.message.Message;
-import no.ntnu.message.OkMessage;
 import no.ntnu.message.SetChannelCommand;
 import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;
@@ -69,7 +69,7 @@ public class CommandTests {
   private static void assertSetChannel(TvLogic logic, int channel) {
     SetChannelCommand c = new SetChannelCommand(channel);
     Message response = c.execute(logic);
-    assertTrue(response instanceof OkMessage);
+    assertTrue(response instanceof CurrentChannelMessage);
     assertEquals(channel, logic.getCurrentChannel());
   }
 

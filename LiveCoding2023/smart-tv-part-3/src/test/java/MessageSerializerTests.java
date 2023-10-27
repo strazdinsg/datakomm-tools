@@ -21,7 +21,6 @@ import no.ntnu.message.ErrorMessage;
 import no.ntnu.message.GetChannelCommand;
 import no.ntnu.message.Message;
 import no.ntnu.message.MessageSerializer;
-import no.ntnu.message.OkMessage;
 import no.ntnu.message.SetChannelCommand;
 import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;

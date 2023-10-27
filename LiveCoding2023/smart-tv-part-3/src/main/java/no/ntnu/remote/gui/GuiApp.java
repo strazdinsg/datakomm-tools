@@ -16,10 +16,10 @@ import no.ntnu.message.Command;
 import no.ntnu.message.CurrentChannelMessage;
 import no.ntnu.message.GetChannelCommand;
 import no.ntnu.message.Message;
-import no.ntnu.message.OkMessage;
 import no.ntnu.message.SetChannelCommand;
 import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;
+import no.ntnu.message.TvStateMessage;
 import no.ntnu.remote.TcpClient;
 
 /**
@@ -66,8 +66,8 @@ public class GuiApp extends Application {
   private void toggleTvPower() {
     Command command = isTvOn ? new TurnOffCommand() : new TurnOnCommand();
     Message reply = tcpClient.sendCommand(command);
-    if (reply instanceof OkMessage) {
-      setTvState(!isTvOn);
+    if (reply instanceof TvStateMessage tvStateMessage) {
+      setTvState(tvStateMessage.isOn());
       updatePowerButtonText();
       if (isTvOn) {
         queryChannelCount();
@@ -140,7 +140,7 @@ public class GuiApp extends Application {
   private void updateChannel(int channelIncrease) {
     int desiredChannel = currentChannel + channelIncrease;
     Message response = tcpClient.sendCommand(new SetChannelCommand(desiredChannel));
-    if (response instanceof OkMessage) {
+    if (response instanceof CurrentChannelMessage) {
       currentChannel = desiredChannel;
       updateCurrentChannel();
     }
