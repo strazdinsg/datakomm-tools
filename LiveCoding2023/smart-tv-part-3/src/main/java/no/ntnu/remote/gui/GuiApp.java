@@ -1,6 +1,7 @@
 package no.ntnu.remote.gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -11,21 +12,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.message.ChannelCountCommand;
-import no.ntnu.message.ChannelCountMessage;
 import no.ntnu.message.Command;
-import no.ntnu.message.CurrentChannelMessage;
 import no.ntnu.message.GetChannelCommand;
-import no.ntnu.message.Message;
 import no.ntnu.message.SetChannelCommand;
 import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;
-import no.ntnu.message.TvStateMessage;
+import no.ntnu.remote.ClientMessageListener;
 import no.ntnu.remote.TcpClient;
 
 /**
  * Graphical User Interface (GUI) application for a remote control.
  */
-public class GuiApp extends Application {
+public class GuiApp extends Application implements ClientMessageListener {
   private static final int WIDTH = 200;
   private static final int HEIGHT = 150;
   private static TcpClient tcpClient;
@@ -44,6 +42,7 @@ public class GuiApp extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
+    tcpClient.startListeningThread(this);
     Scene scene = new Scene(createContent(), WIDTH, HEIGHT);
     stage.setScene(scene);
     stage.show();
@@ -65,40 +64,32 @@ public class GuiApp extends Application {
 
   private void toggleTvPower() {
     Command command = isTvOn ? new TurnOffCommand() : new TurnOnCommand();
-    Message reply = tcpClient.sendCommand(command);
-    if (reply instanceof TvStateMessage tvStateMessage) {
-      setTvState(tvStateMessage.isOn());
-      updatePowerButtonText();
-      if (isTvOn) {
-        queryChannelCount();
-        queryCurrentChannel();
-      }
-    }
+    tcpClient.sendCommand(command);
   }
 
   private void setTvState(boolean newState) {
     isTvOn = newState;
-    channelPanel.setDisable(!isTvOn);
+    Platform.runLater(() -> channelPanel.setDisable(!isTvOn));
   }
 
   private void updatePowerButtonText() {
     String text = isTvOn ? "Turn off" : "Turn ON";
-    powerButton.setText(text);
+    Platform.runLater(() -> powerButton.setText(text));
   }
 
   private void queryCurrentChannel() {
-    Message response = tcpClient.sendCommand(new GetChannelCommand());
-    if (response instanceof CurrentChannelMessage currentChannelMessage) {
-      currentChannel = currentChannelMessage.getChannel();
-      updateCurrentChannel();
-    }
+    tcpClient.sendCommand(new GetChannelCommand());
+//    if (response instanceof CurrentChannelMessage currentChannelMessage) {
+//      currentChannel = currentChannelMessage.getChannel();
+//      updateCurrentChannel();
+//    }
   }
 
   private void queryChannelCount() {
-    Message response = tcpClient.sendCommand(new ChannelCountCommand());
-    if (response instanceof ChannelCountMessage channelCountMessage) {
-      updateChannelCount(channelCountMessage.getChannelCount());
-    }
+    tcpClient.sendCommand(new ChannelCountCommand());
+//    if (response instanceof ChannelCountMessage channelCountMessage) {
+//      updateChannelCount(channelCountMessage.getChannelCount());
+//    }
   }
 
   private void updateCurrentChannel() {
@@ -139,10 +130,21 @@ public class GuiApp extends Application {
 
   private void updateChannel(int channelIncrease) {
     int desiredChannel = currentChannel + channelIncrease;
-    Message response = tcpClient.sendCommand(new SetChannelCommand(desiredChannel));
-    if (response instanceof CurrentChannelMessage) {
-      currentChannel = desiredChannel;
-      updateCurrentChannel();
+    tcpClient.sendCommand(new SetChannelCommand(desiredChannel));
+//    if (response instanceof CurrentChannelMessage) {
+//      currentChannel = desiredChannel;
+//      updateCurrentChannel();
+//    }
+  }
+
+  @Override
+  public void handleTvStateChange(boolean isOn) {
+    System.out.println("handleTvSTate " + isOn);
+    setTvState(isOn);
+    updatePowerButtonText();
+    if (isTvOn) {
+      queryChannelCount();
+      queryCurrentChannel();
     }
   }
 }
