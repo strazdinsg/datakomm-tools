@@ -77,29 +77,6 @@ public class GuiApp extends Application implements ClientMessageListener {
     Platform.runLater(() -> powerButton.setText(text));
   }
 
-  private void queryCurrentChannel() {
-    tcpClient.sendCommand(new GetChannelCommand());
-//    if (response instanceof CurrentChannelMessage currentChannelMessage) {
-//      currentChannel = currentChannelMessage.getChannel();
-//      updateCurrentChannel();
-//    }
-  }
-
-  private void queryChannelCount() {
-    tcpClient.sendCommand(new ChannelCountCommand());
-//    if (response instanceof ChannelCountMessage channelCountMessage) {
-//      updateChannelCount(channelCountMessage.getChannelCount());
-//    }
-  }
-
-  private void updateCurrentChannel() {
-    currentChannelLabel.setText("" + currentChannel);
-  }
-
-  private void updateChannelCount(int channelCount) {
-    channelCountLabel.setText("" + channelCount);
-  }
-
   private Parent createChannelPanel() {
     channelPanel = new HBox(createChannelIndicatorPanel(),
         createChannelButtonPanel());
@@ -131,20 +108,26 @@ public class GuiApp extends Application implements ClientMessageListener {
   private void updateChannel(int channelIncrease) {
     int desiredChannel = currentChannel + channelIncrease;
     tcpClient.sendCommand(new SetChannelCommand(desiredChannel));
-//    if (response instanceof CurrentChannelMessage) {
-//      currentChannel = desiredChannel;
-//      updateCurrentChannel();
-//    }
   }
 
   @Override
   public void handleTvStateChange(boolean isOn) {
-    System.out.println("handleTvSTate " + isOn);
     setTvState(isOn);
     updatePowerButtonText();
     if (isTvOn) {
-      queryChannelCount();
-      queryCurrentChannel();
+      tcpClient.sendCommand(new ChannelCountCommand());
+      tcpClient.sendCommand(new GetChannelCommand());
     }
+  }
+
+  @Override
+  public void handleChannelCount(int channelCount) {
+    Platform.runLater(() -> channelCountLabel.setText("" + channelCount));
+  }
+
+  @Override
+  public void handleChannelChange(int channel) {
+    currentChannel = channel;
+    Platform.runLater(() -> currentChannelLabel.setText("" + currentChannel));
   }
 }

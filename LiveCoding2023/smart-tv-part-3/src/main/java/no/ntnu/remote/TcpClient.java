@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import no.ntnu.message.ChannelCountMessage;
 import no.ntnu.message.Command;
+import no.ntnu.message.CurrentChannelMessage;
 import no.ntnu.message.Message;
 import no.ntnu.message.MessageSerializer;
 import no.ntnu.message.TvStateMessage;
@@ -62,6 +64,10 @@ public class TcpClient {
   private void handleIncomingMessage(Message message, ClientMessageListener listener) {
     if (message instanceof TvStateMessage tvStateMessage) {
       listener.handleTvStateChange(tvStateMessage.isOn());
+    } else if (message instanceof ChannelCountMessage channelCountMessage) {
+      listener.handleChannelCount(channelCountMessage.getChannelCount());
+    } else if (message instanceof CurrentChannelMessage currentChannelMessage) {
+      listener.handleChannelChange(currentChannelMessage.getChannel());
     }
   }
 
