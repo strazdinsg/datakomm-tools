@@ -1,6 +1,7 @@
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
+import no.ntnu.message.TvStateMessage;
 import no.ntnu.tv.TvLogic;
 import no.ntnu.message.ChannelCountCommand;
 import no.ntnu.message.ChannelCountMessage;
@@ -43,7 +44,7 @@ public class CommandTests {
     TvLogic logic = new TvLogic(CHANNEL_COUNT);
     TurnOnCommand c = new TurnOnCommand();
     Message response = c.execute(logic);
-    assertTrue(response instanceof OkMessage);
+    assertTrue(response instanceof TvStateMessage);
     assertTrue(logic.isTvOn());
   }
 
@@ -53,7 +54,7 @@ public class CommandTests {
     logic.turnOn();
     TurnOffCommand c = new TurnOffCommand();
     Message response = c.execute(logic);
-    assertTrue(response instanceof OkMessage);
+    assertTrue(response instanceof TvStateMessage);
     assertTrue(!logic.isTvOn());
   }
 

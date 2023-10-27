@@ -13,6 +13,8 @@ public class MessageSerializer {
   public static final String CHANNEL_COUNT_MESSAGE = "N";
   public static final String ERROR_MESSAGE = "e";
   public static final String CURRENT_CHANNEL_MESSAGE = "C";
+  public static final String TV_STATE_ON_MESSAGE = "TVON";
+  public static final String TV_STATE_OFF_MESSAGE = "TVoff";
 
   /**
    * Not allowed to instantiate this utility class.

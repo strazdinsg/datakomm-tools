@@ -10,6 +10,9 @@ import static no.ntnu.message.MessageSerializer.OK_RESPONSE;
 import static no.ntnu.message.MessageSerializer.SET_CHANNEL_COMMAND;
 import static no.ntnu.message.MessageSerializer.TURN_OFF_COMMAND;
 import static no.ntnu.message.MessageSerializer.TURN_ON_COMMAND;
+import static no.ntnu.message.MessageSerializer.TV_STATE_OFF_MESSAGE;
+import static no.ntnu.message.MessageSerializer.TV_STATE_ON_MESSAGE;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 import no.ntnu.message.ChannelCountCommand;
@@ -23,6 +26,7 @@ import no.ntnu.message.OkMessage;
 import no.ntnu.message.SetChannelCommand;
 import no.ntnu.message.TurnOffCommand;
 import no.ntnu.message.TurnOnCommand;
+import no.ntnu.message.TvStateMessage;
 import org.junit.Test;
 
 /**
@@ -212,5 +216,33 @@ public class MessageSerializerTests {
     assertNull(MessageSerializer.fromString("Zis iz insein"));
     assertNull(MessageSerializer.fromString("+"));
     assertNull(MessageSerializer.fromString("G"));
+  }
+
+  @Test
+  public void testTvOnStateMessageToString() {
+    TvStateMessage m = new TvStateMessage(true);
+    assertEquals(TV_STATE_ON_MESSAGE, MessageSerializer.toString(m));
+  }
+
+  @Test
+  public void testTvOffStateMessageToString() {
+    TvStateMessage m = new TvStateMessage(false);
+    assertEquals(TV_STATE_OFF_MESSAGE, MessageSerializer.toString(m));
+  }
+
+  @Test
+  public void testTvOnStateMessageFromString() {
+    Message m = MessageSerializer.fromString(TV_STATE_ON_MESSAGE);
+    assertTrue(m instanceof TvStateMessage);
+    TvStateMessage tsm = (TvStateMessage) m;
+    assertTrue(tsm.isOn());
+  }
+
+  @Test
+  public void testTvOffStateMessageFromString() {
+    Message m = MessageSerializer.fromString(TV_STATE_OFF_MESSAGE);
+    assertTrue(m instanceof TvStateMessage);
+    TvStateMessage tsm = (TvStateMessage) m;
+    assertFalse(tsm.isOn());
   }
 }
