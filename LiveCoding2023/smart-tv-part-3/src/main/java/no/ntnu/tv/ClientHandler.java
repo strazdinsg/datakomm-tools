@@ -12,7 +12,7 @@ import no.ntnu.message.MessageSerializer;
 /**
  * Handler for one specific client connection (TCP).
  */
-public class ClientHandler {
+public class ClientHandler extends Thread {
   private final TvLogic logic;
   private final Socket socket;
   private final BufferedReader socketReader;
@@ -35,6 +35,7 @@ public class ClientHandler {
   /**
    * Run the client handling logic.
    */
+  @Override
   public void run() {
     Message response;
     do {

@@ -28,7 +28,7 @@ public class TvServer {
       while (isTcpServerRunning) {
         ClientHandler clientHandler = acceptNextClientConnection(listeningSocket);
         if (clientHandler != null) {
-          clientHandler.run();
+          clientHandler.start();
         }
       }
     }
