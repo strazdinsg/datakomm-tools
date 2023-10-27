@@ -9,6 +9,6 @@ public class TurnOffCommand extends Command {
   @Override
   public Message execute(TvLogic logic) {
     logic.turnOff();
-    return new OkMessage();
+    return new TvStateMessage(logic.isTvOn());
   }
 }

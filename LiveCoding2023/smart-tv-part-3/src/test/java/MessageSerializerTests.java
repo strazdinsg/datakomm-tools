@@ -6,7 +6,6 @@ import static no.ntnu.message.MessageSerializer.CHANNEL_COUNT_MESSAGE;
 import static no.ntnu.message.MessageSerializer.CURRENT_CHANNEL_MESSAGE;
 import static no.ntnu.message.MessageSerializer.ERROR_MESSAGE;
 import static no.ntnu.message.MessageSerializer.GET_CHANNEL_COMMAND;
-import static no.ntnu.message.MessageSerializer.OK_RESPONSE;
 import static no.ntnu.message.MessageSerializer.SET_CHANNEL_COMMAND;
 import static no.ntnu.message.MessageSerializer.TURN_OFF_COMMAND;
 import static no.ntnu.message.MessageSerializer.TURN_ON_COMMAND;
@@ -198,16 +197,6 @@ public class MessageSerializerTests {
   private void assertCurrentChannelMessageToString(int channel) {
     assertEquals(CURRENT_CHANNEL_MESSAGE + channel,
         MessageSerializer.toString(new CurrentChannelMessage(channel)));
-  }
-
-  @Test
-  public void testOkMessage() {
-    assertTrue(MessageSerializer.fromString(OK_RESPONSE) instanceof OkMessage);
-  }
-
-  @Test
-  public void testOkMessageToString() {
-    assertEquals(OK_RESPONSE, MessageSerializer.toString(new OkMessage()));
   }
 
   @Test

@@ -9,7 +9,6 @@ public class MessageSerializer {
   public static final String TURN_OFF_COMMAND = "0";
   public static final String GET_CHANNEL_COMMAND = "g";
   public static final String SET_CHANNEL_COMMAND = "s";
-  public static final String OK_RESPONSE = "o";
   public static final String CHANNEL_COUNT_MESSAGE = "N";
   public static final String ERROR_MESSAGE = "e";
   public static final String CURRENT_CHANNEL_MESSAGE = "C";
@@ -44,8 +43,11 @@ public class MessageSerializer {
         case GET_CHANNEL_COMMAND:
           m = new GetChannelCommand();
           break;
-        case OK_RESPONSE:
-          m = new OkMessage();
+        case TV_STATE_ON_MESSAGE:
+          m = new TvStateMessage(true);
+          break;
+        case TV_STATE_OFF_MESSAGE:
+          m = new TvStateMessage(false);
           break;
         default:
           if (s.length() > 1) {
@@ -112,8 +114,8 @@ public class MessageSerializer {
       s = CURRENT_CHANNEL_MESSAGE + currentChannelMessage.getChannel();
     } else if (m instanceof ErrorMessage errorMessage) {
       s = ERROR_MESSAGE + errorMessage.getMessage();
-    } else if (m instanceof OkMessage) {
-      s = OK_RESPONSE;
+    } else if (m instanceof TvStateMessage tvStateMessage) {
+      s = tvStateMessage.isOn() ? TV_STATE_ON_MESSAGE : TV_STATE_OFF_MESSAGE;
     } else if (m instanceof SetChannelCommand setChannelCommand) {
       s = SET_CHANNEL_COMMAND + setChannelCommand.getChannel();
     }
